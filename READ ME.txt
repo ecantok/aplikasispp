@@ -1,0 +1,23 @@
+DB NAME 		= dbspprpl3;
+
+Halaman = localhost/aplikasispp
+
+LOGIN :
+*USERNAME
+**PASSWORD
+-- Sebagai Admin
+**Admin (admin)
+*123
+
+-- Sebagai Petugas
+
+**Favif (petugas)
+*111
+
+**Adinda (petugas)
+*1234
+
+-- Sebaga Siswa
+**1111  (Siswa)
+*VX2UEC
+
