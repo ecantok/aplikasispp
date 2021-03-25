@@ -1,0 +1,40 @@
+1. J.620100.004.01 Menggunakan struktur data
+- Apakah anda dapat mengidentifikasi konsep data dan struktur data ?
+- Apakah anda dapat menerapkan struktur data dan akses terhadap struktur data tersebut ?
+
+2. J.620100.009.02 Menggunakan spesifikasi program
+- Apakah anda dapat menggunakan metode pengembangan program ?
+- Apakah anda dapat menggunakan diagram program dan deskripsi program ?
+- Apakah anda dapat menerapkan hasil pemodelan ke dalam pengembangan program ?
+
+3. J.620100.010.01 Menerapkan perintah eksekusi bahasa pemrograman berbasis teks,grafik, dan multimedia
+- Apakah anda dapat mengidentifikasi mekanisme running atau eksekusi source code ?
+- Apakah anda dapat mengeksekusi source code ?
+- Apakah anda dapat mengidentifikasi hasil eksekusi ?
+
+4. J.620100.016.01 Menulis kode dengan prinsip sesuai guidelines dan best practices
+- Apakah anda dapat menerapkan codingguidelines dan best practices dalam penulisan program (kode sumber) ?
+- Apakah anda dapat menggunakan ukuran performansi dalam menuliskan kode sumber ?
+
+5. J.620100.017.02 Mengimplementasikan pemrograman terstruktur (Jumlah :12)
+- Apakah anda dapat menggunakan tipe data dan control program ?
+- Apakah anda dapat membuat program sederhana ?
+- Apakah anda dapat membuat program menggunakan prosedur dan fungsi ?
+- Apakah anda dapat membuat program menggunakan array ?
+- Apakah anda dapat membuat program untuk akses file ?
+- Apakah anda dapat melakukan identifikasi kode program ?
+- Apakah anda dapat membuat dokumentasi modul program ?
+- Apakah anda dapat membuat dokumentasi fungsi, prosedur atau method program ?
+- Apakah anda dapat men-generate dokumentasi ?
+- Apakah anda dapat mempersiapkan kode program ?
+- Apakah anda dapat melakukan debugging ?
+- Apakah anda dapat memperbaiki program ?
+
+6. J.620100.033.02 Melaksanakan pengujian unit program
+- Apakah anda dapat menentukan kebutuhan uji coba dalam pengembangan ?
+- Apakah anda dapat mempersiapkan dokumentasi uji coba ?
+- Apakah anda dapat mempersiapkan data uji ?
+- Apakah anda dapat melaksanakan prosedur uji coba?
+- Apakah anda dapat mengevaluasi hasil uji coba ?
+
+
