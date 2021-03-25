@@ -183,6 +183,7 @@ input:read-only {
   border: solid 1px var(--line);
   color: #333;
   text-indent: 5px;
+  white-space: nowrap;
   }
   td,th{
     padding: 10px;
