@@ -49,12 +49,12 @@ require_once 'app.php';
           unset($stmtCreateSpp);
         }
         
-        setpesan("Siswa Berhasil","ditambahkan");
+        $app->setpesan("Siswa Berhasil","ditambahkan");
       } else {
-        setpesan("Siswa Gagal", "ditambahkan");
+        $app->setpesan("Siswa Gagal", "ditambahkan");
       }
     } else {
-      setpesan("NIS tidak boleh sama!");
+      $app->setpesan("NIS tidak boleh sama!");
     }
   }
   header("Location: siswa.php")

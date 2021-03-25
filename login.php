@@ -15,7 +15,7 @@
       <form action="proseslogin.php" method="post">
       <p style="text-align: center;">
         <?php 
-        pesan();
+        $app->pesan();
         ?>
       </p>
         <br>

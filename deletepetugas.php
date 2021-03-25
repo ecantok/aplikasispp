@@ -7,7 +7,7 @@ if (!$session) {
 if (!empty($_GET['id'])) {
   $id = $_GET["id"];
   if ($id == 1) {
-    setpesan("Admin tidak bisa","dihapus");
+    $app->setpesan("Admin tidak bisa","dihapus");
     exit;
   }
   $stmt = $conn->prepare("DELETE FROM tbpetugas WHERE KodePetugas = ?");
@@ -18,9 +18,9 @@ if (!empty($_GET['id'])) {
     $stmt2->bind_param("s",$id);
     $stmt2->execute();
 
-      setpesan("Petugas Berhasil","dihapus");
+      $app->setpesan("Petugas Berhasil","dihapus");
     } else {
-      setpesan("Petugas Gagal", "dihapus");
+      $app->setpesan("Petugas Gagal", "dihapus");
     }
   header("Location:petugas.php");
 }

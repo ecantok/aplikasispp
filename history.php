@@ -23,15 +23,15 @@ if (!$session) {
     <h2>History Pembayaran Spp</h2>
     <div>
       <?php 
-        pesanDialog();
+        $app->pesanDialog();
       ?>
         
     </div>
     <div style="display: none;">
       <button id="tampilModal">Tambah Data Kelas</button>
     </div>
-    <?php if(!cekPemissionLevel($levelUser,"Siswa")): ?>
-    <form action="" method="get">
+    <?php if(!$app->cekPemissionLevel($levelUser,"Siswa")): ?>
+    <form method="get">
       <div class="flex">
         <div>
           <label for="NIS"><b>NIS</b></label>
@@ -92,7 +92,7 @@ if (!$session) {
       <tr>
         <td>Jumlah Bayaran</td>
         <td>:</td>
-        <td><?= "Rp.".numberformat($dataSiswa['BesarBayaran']) ?></td>
+        <td><?= "Rp.".$app->numberformat($dataSiswa['BesarBayaran']) ?></td>
       </tr>
   </table>
   <hr>
@@ -143,7 +143,7 @@ if (!$session) {
     $get = "?nis=".$nis;
   }
   ?>
-  <p><i>Histroy SPP hanya bisa melihat data SPP dengan NIS <?=(cekPemissionLevel($levelUser,'Siswa'))? "Anda":"yang dicari. Jika ingin melakukan entri pembayaran bisa dilakukan di halaman <a href='pembayaran.php{$get}'> berikut</a>";?></i></p>
+  <p><i>Histroy SPP hanya bisa melihat data SPP dengan NIS <?=($app->cekPemissionLevel($levelUser,'Siswa'))? "Anda":"yang dicari. Jika ingin melakukan entri pembayaran bisa dilakukan di halaman <a href='pembayaran.php{$get}'> berikut</a>";?></i></p>
 </body>
 <script src="script.js"></script>
 </html>

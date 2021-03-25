@@ -20,15 +20,19 @@
     $levelUser = $_SESSION['level'];
   } 
 
-  // Sekadar cek hak akses aku masih experiment ini...
-  function cekPemissionLevel($levelUser, $level = 'Admin'){
+  //Buat objek yang akan digunakan
+  $app = new App();
+
+  class App {
+  // Cek Hak Akses
+  public function cekPemissionLevel($levelUser, $level = 'Admin'){
     if ($levelUser == $level) {
       return true;
     }
     return false;
   }
   
-  function konfirmasiPassword($password1, $password2){
+  public function konfirmasiPassword($password1, $password2){
     if ($password1 == $password2) {
       return true;
     }
@@ -36,12 +40,12 @@
   }
 
  //Format Angka 
- function numberformat($number){
+ public function numberformat($number){
     return number_format($number,0,',','.');
  }
   
  //Format String
- function generateRandomString($length = 6){
+ public function generateRandomString($length = 6){
   $randomstring = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
   $password = substr(str_shuffle($randomstring),0,$length);
   return $password;
@@ -56,12 +60,12 @@
   ];
 }
 
-function setPesanDirect($pesan)
+public function setPesanDirect($pesan)
 {
   $_SESSION['pesandirect'] = $pesan;
 }
 //Format Pesan Alert Dialog
-function pesanDirect(){
+public function pesanDirect(){
   if (!empty($_SESSION['pesandirect'])) {
   echo'
   <script defer>alert("'.$_SESSION['pesandirect'].'")</script>';
@@ -70,7 +74,7 @@ function pesanDirect(){
 }
 
 //Format Pesan Alert Dialog
- function pesanDialog(){
+public function pesanDialog(){
   if (!empty($_SESSION['flash'])) {
   echo'
   <script defer>alert("'.$_SESSION['flash']['pesan'].' '.$_SESSION['flash']['aksi'].'")</script>';
@@ -79,7 +83,7 @@ function pesanDirect(){
 }
 
 //Format Pesan
-function pesan(){
+public function pesan(){
   if (!empty($_SESSION['flash'])) {
   echo'
   <div style="color :'.$_SESSION['flash']['warna'].';">
@@ -87,18 +91,31 @@ function pesan(){
   unset($_SESSION['flash']);
   }
 }
-$bulan = [
+
+public function returnForm(...$input)
+{
+  $_SESSION["returnForm"] = $input; 
+}
+
+public function cekReturnForm($returnedform)
+{
+  if (!empty($_SESSION["returnForm"])) {
+    return $_SESSION["returnForm"];
+  }
+}
+
+private $bulan = [
   "Juli","Agustus","September","Oktober","November","Desember", "Januari","Februari","Maret",
 "April","Mei","Juni"];
 function buatBulan($selected = "")
 {
-  global $bulan;
+  
   echo '<optgroup label="Semester 1">';
   for ($i=0; $i < 12; $i++) { 
-    if ($bulan[$i] == $selected) {
-      echo "<option value=".$bulan[$i]." selected>".$bulan[$i]."</option>";
+    if ($this->bulan[$i] == $selected) {
+      echo "<option value=".$this->bulan[$i]." selected>".$this->bulan[$i]."</option>";
     } else {
-      echo "<option value=".$bulan[$i].">".$bulan[$i]."</option>";
+      echo "<option value=".$this->bulan[$i].">".$this->bulan[$i]."</option>";
     } if ($i == 5) {
       echo '</optgroup>';
       echo '<optgroup label="Semester 2">';
@@ -107,7 +124,7 @@ function buatBulan($selected = "")
   echo '</optgroup>';
 }
 
-function buatTahunAjaran($selected = "")
+public function buatTahunAjaran($selected = "")
 {
   $tahunajaran = ["2020/2021","2021/2022","2022/2023","2023/2024","2024/2025"];
   for($i = 0; $i < count($tahunajaran); $i++){
@@ -118,4 +135,5 @@ function buatTahunAjaran($selected = "")
     }
   } 
 }
+  }
 ?>

@@ -17,7 +17,7 @@
     </header>
     <form class="formbox" action="prosesregister.php" method="post">
       <div style="color: red; margin: 10px auto 20px;">
-        <?php pesan();?>
+        <?php $app->pesan();?>
       </div>
       <div>
         <label for="nis"><b>NIS</b></label>

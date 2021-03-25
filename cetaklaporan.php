@@ -123,7 +123,7 @@ require_once 'app.php';
     <tr>
       <td>Jumlah Bayaran</td>
       <td>:</td>
-      <td><?= "Rp.".numberformat($dataSiswa['BesarBayaran']) ?></td>
+      <td><?= "Rp.".$app->numberformat($dataSiswa['BesarBayaran']) ?></td>
     </tr>
   </table>
 <?php }

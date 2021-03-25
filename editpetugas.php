@@ -9,7 +9,7 @@ require_once 'app.php';
     $Alamat = $_POST['Alamat'];
     $Telp = $_POST['Telp'];
     $Jabatan = $_POST['Jabatan'];
-    $cekPass = konfirmasiPassword($Password,$Password2);
+    $cekPass = $app->konfirmasiPassword($Password,$Password2);
     if ($cekPass) {
       if ($cekPass != '') {
         $query = "UPDATE `tbpetugas` SET
@@ -46,12 +46,12 @@ require_once 'app.php';
       $stmt2->execute();
       
       if ($conn->errno == 0) {
-        setpesan("Petugas Berhasil","diedit");
+        $app->setpesan("Petugas Berhasil","diedit");
       } else {
-        setpesan("Petugas Gagal", "diedit");
+        $app->setpesan("Petugas Gagal", "diedit");
       }
     } else {
-      setpesan("Password Konfirmasi Salah!");
+      $app->setpesan("Password Konfirmasi Salah!");
     }
   }
   header("Location: petugas.php")

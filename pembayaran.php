@@ -2,7 +2,7 @@
 require_once 'app.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
-if (!$session||cekPemissionLevel($levelUser,"Siswa")) {
+if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
   header("Location:index.php");
   exit;
 } 
@@ -23,7 +23,7 @@ if (!$session||cekPemissionLevel($levelUser,"Siswa")) {
     <h2>Entri Pembayaran Spp</h2>
     <div>
       <?php 
-        pesanDialog();
+        $app->pesanDialog();
       ?>
         
     </div>
@@ -78,7 +78,7 @@ if (!$session||cekPemissionLevel($levelUser,"Siswa")) {
       <tr>
         <td>Jumlah Bayaran</td>
         <td>:</td>
-        <td><?= "Rp.".numberformat($dataSiswa['BesarBayaran']) ?></td>
+        <td><?= "Rp.".$app->numberformat($dataSiswa['BesarBayaran']) ?></td>
       </tr>
   </table>
   <hr>
@@ -105,10 +105,10 @@ if (!$session||cekPemissionLevel($levelUser,"Siswa")) {
         while ($dataSPP = $resultSPP->fetch_assoc()) {
           ?>
           <tr>
-            <td onclick="confirm('idk')"><?=$no?></td>
+            <td><?=$no?></td>
             <td><?=$dataSPP['KodePembayaran']?></td>
             <td><?=$dataSPP['NamaPetugas']?></td>
-            <td><?=$dataSPP['TglPembayaran']?></td>
+            <td style="text-align: center;"><?= ($dataSPP['TglPembayaran']=='0000-00-00')? "-" : $dataSPP['TglPembayaran']?></td>
             <td><?=$dataSPP['BulanDibayar']?></td>
             <td><?=$dataSPP['TahunDibayar']?></td>
             <td style="text-align: center;"><?=$dataSPP['StatusPembayaran']?></td>

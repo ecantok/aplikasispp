@@ -23,9 +23,9 @@ if (!empty($_GET['id'])) {
 
 
   if (!$conn->errno) {
-    setpesan("Siswa Berhasil","dihapus");
+    $app->setpesan("Siswa Berhasil","dihapus");
   } else {
-    setpesan("Siswa Gagal", "dihapus");
+    $app->setpesan("Siswa Gagal", "dihapus");
   }
   header("Location:siswa.php");
 }

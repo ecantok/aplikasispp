@@ -11,9 +11,9 @@ if (!empty($_GET['id'])) {
   $stmt->execute();
 
     if ($conn->affected_rows > 0) {
-      setpesan("Data SPP Berhasil","dihapus");
+      $app->setpesan("Data SPP Berhasil","dihapus");
     } else {
-      setpesan("Data SPP Gagal", "dihapus");
+      $app->setpesan("Data SPP Gagal", "dihapus");
     }
   header("Location:spp.php");
 }

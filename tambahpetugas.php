@@ -9,7 +9,7 @@ require_once 'app.php';
     $Alamat = $_POST['Alamat'];
     $Telp = $_POST['Telp'];
     $Jabatan = $_POST['Jabatan'];
-    $cekPass = konfirmasiPassword($Password,$Password2);
+    $cekPass = $app->konfirmasiPassword($Password,$Password2);
 
 
     $stmtCek = $conn->prepare("SELECT KodePetugas FROM tbpetugas WHERE KodePetugas = ?");
@@ -33,21 +33,21 @@ require_once 'app.php';
             $stmt2->execute();
             // die(var_dump($conn->affected_rows));
             if ($conn->affected_rows > 0) {
-              setpesan("Petugas Berhasil","ditambahkan");
+              $app->setpesan("Petugas Berhasil","ditambahkan");
             } else {
-              setpesan("Petugas Gagal", "ditambahkan");
+              $app->setpesan("Petugas Gagal", "ditambahkan");
             }
           } else {
-            setpesan("Buatlah Username yang berbeda!");
+            $app->setpesan("Buatlah Username yang berbeda!");
           }
         } else {
-          setpesan("ID Petugas tidak boleh sama!");
+          $app->setpesan("ID Petugas tidak boleh sama!");
         }
       } else {
-        setpesan("Password Harap diisi!");
+        $app->setpesan("Password Harap diisi!");
       }
     } else {
-      setpesan("Password Konfirmasi salah!");
+      $app->setpesan("Password Konfirmasi salah!");
     }
   }
   header("Location: petugas.php")

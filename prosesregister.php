@@ -8,7 +8,7 @@
     $namalengkap = $_POST['namalengkap'];
 
     //Password diambil dari fungsi acak generate random string
-    $password = generateRandomString();
+    $password = $app->generateRandomString();
     
 
     //Cek apakah nis sudah ada di table siswa
@@ -51,20 +51,19 @@
           $stmt4 ->bind_param("sss",$nis,$password,$level);
           $stmt4 ->execute();
           $stmt4 ->get_result();
-          var_dump($stmt4);
           if ($conn->affected_rows >0) {
             
             //Kirimkan Username dan Password
-            setpesan("Berhasil Terdaftar! Masukkan data berikut untuk login!<p style='text-align :center;'> Username: <b>".$nis."</b> Password: <b>".$password."</b></p>","","black");
+            $app->setpesan("Berhasil Terdaftar! Masukkan data berikut untuk login!<p style='text-align :center;'> Username: <b>".$nis."</b> Password: <b>".$password."</b></p>","","black");
             header("Location:login.php");
           }
         }
       } else {
-        setpesan("Maaf Username sudah diambil, Kontak admin untuk gantikan NIS","red");
+        $app->setpesan("Maaf Username sudah diambil, Kontak admin untuk gantikan NIS","red");
         header("Location:register.php");
       }
     } else {
-      setpesan("Pastikan NIS terdaftar!","red");
+      $app->setpesan("Pastikan NIS terdaftar!","red");
       header("Location:register.php");
     }
   }

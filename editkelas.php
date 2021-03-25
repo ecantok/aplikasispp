@@ -17,9 +17,9 @@ require_once 'app.php';
     $stmt->execute();
     $stmt->store_result();
     if ($conn->error == '') {
-      setpesan("Kelas Berhasil","diedit");
+      $app->setpesan("Kelas Berhasil","diedit");
     } else {
-      setpesan("Kelas Gagal", "diedit","red");
+      $app->setpesan("Kelas Gagal", "diedit","red");
     }
   }
   header("Location: kelas.php");

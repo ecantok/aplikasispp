@@ -15,9 +15,9 @@ require_once 'app.php';
     $stmt ->bind_param('sssss',$nama,$alamat,$telp,$kelas,$nis);
     $stmt->execute();
     if ($conn->affected_rows > 0) {
-      setpesan("Siswa Berhasil","diedit");
+      $app->setpesan("Siswa Berhasil","diedit");
     } else {
-      setpesan("Siswa Gagal", "diedit");
+      $app->setpesan("Siswa Gagal", "diedit");
     }
   }
   header("Location: siswa.php")

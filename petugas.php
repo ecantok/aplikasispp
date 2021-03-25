@@ -2,7 +2,7 @@
 require_once 'app.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
-if (!$session||cekPemissionLevel($levelUser)===false) {
+if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   header("Location:index.php");
   exit;
 } 
@@ -26,7 +26,7 @@ if (!$session||cekPemissionLevel($levelUser)===false) {
     ?>
     <h2>Data Petugas</h2>
     <div>
-      <?php pesanDialog();?>
+      <?php $app->pesanDialog();?>
     </div>
     <div class="mb">
       <button id="tampilModal" class="button">Tambah Data Petugas</button>
@@ -48,7 +48,7 @@ if (!$session||cekPemissionLevel($levelUser)===false) {
               <td id="nama<?=$row['KodePetugas']?>"><?=$row['Username'] ?></td>
               <td><?=$row['Alamat'] ?></td>
               <td><?=$row['Telp'] ?></td>
-              <td><?=$row['Jabatan'] ?></td>
+              <td style="width: auto;"><?=$row['Jabatan'] ?></td>
               <td>
                 <span><button class="blue" onclick="editPetugas('<?=$row['KodePetugas'] ?>')">Edit</button></span>
                 <?php if ($row['KodePetugas']!=1){?>
@@ -89,9 +89,9 @@ if (!$session||cekPemissionLevel($levelUser)===false) {
             <small class="info">Apabila password dibiarkan kosong, Password tidak diedit</small>
           </div>
           <label for="Alamat"><b>Alamat</b></label>
-          <input type="text" placeholder="Masukkan Alamat" name="Alamat" id="Alamat" required>
+          <input type="text" placeholder="Masukkan Alamat" name="Alamat" id="Alamat">
           <label for="Telp"><b>Telp</b></label>
-          <input type="text" placeholder="Masukkan Nomor Telp" name="Telp" id="Telp" required>
+          <input type="text" placeholder="Masukkan Nomor Telp" name="Telp" id="Telp">
           <label for="Jabatan"><b>Jabatan</b></label>
           <input type="text" placeholder="Masukkan Jabatan" name="Jabatan" id="Jabatan" required>
           <button id="tombolAksi" type="submit">Simpan</button>

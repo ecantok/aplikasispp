@@ -23,6 +23,7 @@ if (!empty($_GET)&&$_GET['id']!=''&&$_GET['act']!='') {
       WHERE KodePembayaran = ?
     ");
     } elseif ($_GET['act']=='batal') {
+      $today = "0000-00-00";
       $stmt = $conn->prepare("UPDATE `tbpembayaran` SET 
       `KodePetugas`= ?,
       `TglPembayaran`= ?,
@@ -30,15 +31,15 @@ if (!empty($_GET)&&$_GET['id']!=''&&$_GET['act']!='') {
       WHERE KodePembayaran = ?
       ");
     } else {
-      setpesan("Entri Pembayaran {$dataCek['NIS']} Gagal", "dibuat ...","red");
+      $app->setpesan("Entri Pembayaran {$dataCek['NIS']} Gagal", "dibuat ...","red");
       exit;
     }
     $stmt->bind_param("sss",$idUser,$today, $KodePembayaran);
     $stmt->execute();
     if ($conn->affected_rows > 0) {
-      setpesan("Entri Pembayaran {$dataCek['NIS']} Berhasil","dibuat");
+      $app->setpesan("Entri Pembayaran {$dataCek['NIS']} Berhasil","dibuat");
     } else {
-      setpesan("Entri Pembayaran {$dataCek['NIS']} Gagal", "dibuat","red");
+      $app->setpesan("Entri Pembayaran {$dataCek['NIS']} Gagal", "dibuat","red");
     }
   }
 } 

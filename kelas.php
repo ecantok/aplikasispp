@@ -2,7 +2,7 @@
 require_once 'app.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
-if (!$session||cekPemissionLevel($levelUser)===false) {
+if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   header("Location:index.php");
   exit;
 } 
@@ -26,7 +26,7 @@ if (!$session||cekPemissionLevel($levelUser)===false) {
     ?>
     <h2>Data Kelas</h2>
     <div>
-      <?php pesanDialog(); pesanDirect();?>
+      <?php $app->pesanDialog(); $app->pesanDirect();?>
     </div>
     <div class="mb">
       <button id="tampilModal" class="button">Tambah Data Kelas</button>

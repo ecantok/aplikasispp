@@ -12,9 +12,9 @@ require_once 'app.php';
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->affected_rows > 0) {
-      setpesan("Kelas Berhasil","ditambahkan");
+      $app->setpesan("Kelas Berhasil","ditambahkan");
     } else {
-      setpesan("Kelas Gagal", "ditambahkan","red");
+      $app->setpesan("Kelas Gagal", "ditambahkan","red");
     }
   }
   header("Location: kelas.php");

@@ -11,9 +11,9 @@ require_once 'app.php';
     $stmt->bind_param("sss",$TahunAjaran,$Tingkat,$BesarBayaran);
     $stmt->execute();
     if ($conn->affected_rows > 0) {
-      setpesan("Data Spp Berhasil","ditambahkan");
+      $app->setpesan("Data Spp Berhasil","ditambahkan");
     } else {
-      setpesan("Data Spp Berhasil", "ditambahkan","red");
+      $app->setpesan("Data Spp Berhasil", "ditambahkan","red");
     }
   }
   header("Location: spp.php");

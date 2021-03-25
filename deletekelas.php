@@ -11,9 +11,9 @@ if (!empty($_GET['id'])) {
   $result = $stmt->get_result();
   $stmt->store_result();
     if ($stmt->affected_rows > 0) {
-      setpesan("Kelas Berhasil","dihapus");
+      $app->setpesan("Kelas Berhasil","dihapus");
     } else {
-      setpesan("Kelas Gagal", "dihapus");
+      $app->setpesan("Kelas Gagal", "dihapus");
     }
   header("Location:kelas.php");
 }

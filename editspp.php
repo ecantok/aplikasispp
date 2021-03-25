@@ -12,9 +12,9 @@ require_once 'app.php';
     $stmt->bind_param("ssss",$TahunAjaran,$Tingkat,$BesarBayaran,$id);
     $stmt->execute();
     if ($conn->affected_rows > 0) {
-      setpesan("Data Spp Berhasil","Diedit");
+      $app->setpesan("Data Spp Berhasil","Diedit");
     } else {
-      setpesan("Data Spp Berhasil", "Diedit","red");
+      $app->setpesan("Data Spp Berhasil", "Diedit","red");
     }
   }
   header("Location: spp.php");

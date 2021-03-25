@@ -2,7 +2,7 @@
 require_once 'app.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
-if (!$session||cekPemissionLevel($levelUser)===false) {
+if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   header("Location:index.php");
   exit;
 }
@@ -10,7 +10,7 @@ $query = ("SELECT tbkelas.*, tbspp.TahunAjaran FROM tbkelas JOIN tbspp ON tbkela
 $resultKelas = $conn->query($query);
 $cekKelas = ($resultKelas -> num_rows == 0);
 if ($cekKelas) {
-  setpesan("Mohon Masukan Data Kelas Terlebih Dahulu");
+  $app->setpesan("Mohon Masukan Data Kelas Terlebih Dahulu");
   header("Location: kelas.php");
 }
 $result = $conn->query("SELECT tbs.* , tbk.*, tbspp.TahunAjaran FROM tbsiswa tbs LEFT JOIN tbkelas tbk ON tbs.Kodekelas = tbk.KodeKelas JOIN tbspp ON tbk.KodeSPP = tbspp.KodeSPP ORDER BY tbk.NamaKelas ASC");
@@ -33,7 +33,7 @@ $result = $conn->query("SELECT tbs.* , tbk.*, tbspp.TahunAjaran FROM tbsiswa tbs
       <button id="tampilModal" class="button">Tambah Data Siswa</button>
     </div>
     <div>
-      <?php pesanDialog(); ?>
+      <?php $app->pesanDialog(); ?>
     </div>
     <div id="tableId" style="overflow-x:auto;">
       <table class="table-view">

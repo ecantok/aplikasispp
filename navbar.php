@@ -3,6 +3,7 @@ require_once 'app.php';
 function nav($nav = "home"){
   global $levelUser;
   global $user;
+  global $app;
   
 ?>
   <nav class="navbar">
@@ -20,11 +21,11 @@ function nav($nav = "home"){
     $link = ['spp','kelas','siswa','petugas','pembayaran','history','laporan'];
     $jumlahlink = count($link);
     for ($i=0; $i < $jumlahlink; $i++) { 
-      if (cekPemissionLevel($levelUser,'Petugas')||cekPemissionLevel($levelUser,"Siswa")) {
+      if ($app->cekPemissionLevel($levelUser,'Petugas')||$app->cekPemissionLevel($levelUser,"Siswa")) {
         if ($i <= 3||$i == 6) {
           continue;
         } 
-        if (cekPemissionLevel($levelUser, "Siswa")) {
+        if ($app->cekPemissionLevel($levelUser, "Siswa")) {
           if ($i == 4) {
             continue;
           }  

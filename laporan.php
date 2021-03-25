@@ -1,7 +1,7 @@
 <?php
 
   require_once 'app.php';
-  if (!$session && cekPemissionLevel($levelUser)===false) {
+  if (!$session && $app->cekPemissionLevel($levelUser)===false) {
     header("Location:login.php");
   }
 ?>

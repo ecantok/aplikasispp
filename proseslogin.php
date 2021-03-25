@@ -34,7 +34,7 @@ if (!empty($_POST)) {
       exit;
 
     }
-    setpesan("Username/Password salah!","","red");
+    $app->setpesan("Username/Password salah!","","red");
     header("Location: login.php");
 } else {
   header("Location:login.php") ;
