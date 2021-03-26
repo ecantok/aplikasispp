@@ -23,9 +23,9 @@
         <input type="text" name="username" placeholder="Masukkan Username">
         <label for="password"><b>Password</b></label>
         <input type="password" name="password" placeholder="Masukkan Password">
-        <input class="reset" type="reset" value="Batal" style="margin-top: -5px;">
+        <input class="reset form-button" type="reset" value="Batal" style="margin-top: -5px;">
         <div class="middle" style="margin-top: -20px; align-items: baseline;">
-          <input type="submit" name="login" value="Login">
+          <input class="form-button" type="submit" name="login" value="Login">
           <a class="link" style="float: right; margin-top: 15px;" href="register.php">Daftar</a>
         </div>
         </div>

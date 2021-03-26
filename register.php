@@ -35,9 +35,9 @@
         <label for="telp"><b>Telp</b></label>
         <input type="text" name="telp" placeholder="Masukkan Telp" required>
       </div>
-      <input class="reset" type="reset" value="Batal">
+      <input class="reset form-button" type="reset" value="Batal">
       <div class="middle">
-        <input type="submit" value="Daftar">
+        <input class="form-button" type="submit" value="Daftar">
           <a class="link" href="index.php" style="float:right; margin-top: 15px;">Login</a>
       </div>
     </form>

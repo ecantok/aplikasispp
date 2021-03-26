@@ -42,7 +42,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
           <th>Nama Siswa</th>
           <th>Alamat</th>
           <th>No. Telp</th>
-          <th>Terdaftar</th>
+          <th>User Terdaftar</th>
           <th>Action</th>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
               <td><?=($row['Alamat'] !='')?$row['Alamat'] :'<div style="text-align: center;">-</div>';?></td>
               <td><?=($row['NoTelp'] !='')?$row['NoTelp'] :'<div style="text-align: center;">-</div>';?></td>
               <td style="text-align: center;"><?php
-                echo ($row['Username']=="") ? "BELUM TERDAFTAR" : "TERDAFAR";
+                echo ($row['Username']=="") ? "Belum" : "Terdaftar";
               ?></td>
               <td>
                 <span><button class="blue" onclick="editSiswa('<?=$row['NIS'] ?>')">Edit</button></span>
@@ -96,7 +96,20 @@ $result = $conn->query("SELECT * FROM tbsiswa");
         </form>
       </div>
     </div>
+    <div class="modal" id="modalConfirmDelete">
+      <div class="modal-confirm-content">
+        <span class="close">&times;</span>
+        <h3><span id="modal-title-delete">Konfirmasi Hapus</span></h3>
+        <hr>
+        <p id="textConfirmDelete"></p>
+        <form action="deletesiswa.php" method="get">
+          <input type="hidden" name="nis" id="deleteNis">
+          <input class="reset form-button" name="action" type="submit" value="Hapus User">
+          <input class="reset-darker form-button" name="action" type="submit" value="Hapus Siswa">
+        </form>
+      </div>
     </div>
+  </div>
 </body>
 <script src="script.js"></script>
 </html>

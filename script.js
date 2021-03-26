@@ -4,9 +4,13 @@ url = url[2];
 console.log(url);
 var modal = document.getElementById("modalBox");
 
+var modalConfirmDelete = document.getElementById("modalConfirmDelete");
+
 var btn = document.getElementById("tampilModal");
 
 var span = document.getElementsByClassName("close")[0];
+
+var spanConfirm = document.getElementsByClassName("close")[1];
 
 
 var form = [];
@@ -25,7 +29,6 @@ if (url == "kelas.php") {
   form[2] = document.getElementById("nama");
   form[3] = document.getElementById("alamat");
   form[4] = document.getElementById("telp");
-  form[5] = document.getElementById("kelas");
 
 } else if(url == "petugas.php") {
   
@@ -52,10 +55,15 @@ if (url == "kelas.php") {
 span.onclick = function () {
   modal.style.display="none";
 }
+spanConfirm.onclick = function () {
+  modalConfirmDelete.style.display="none";
+}
 
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
+  } else if (event.target == modalConfirmDelete) {
+    modalConfirmDelete.style.display = "none";
   }
 }
 
@@ -126,7 +134,6 @@ function editSiswa(str) {
       form[2].value = obj.NamaSiswa;
       form[3].value = obj.Alamat;
       form[4].value = obj.NoTelp;
-      form[5].value = obj.Kodekelas;
     }
   }
   xmlhttp.open("GET","getsiswa.php?nis="+str,true);
@@ -134,9 +141,12 @@ function editSiswa(str) {
 }
 //DELETE SISWA 
 function deleteSiswa(nis) {
-  if(confirm("Yakin ingin hapus data siswa "+nis+"?\nPERHATIAN : Ini juga akan menghapus spp siswa tersebut.")){
-    location.href="deletesiswa.php?id="+nis;
-  }
+  // if(confirm("Yakin ingin hapus data siswa "+nis+"?\nPERHATIAN : Ini juga akan menghapus spp siswa tersebut.")){
+  //   location.href="deletesiswa.php?id="+nis;
+  // }
+  document.getElementById("deleteNis").value = nis;
+  modalConfirmDelete.style.display = "block";
+  document.getElementById("textConfirmDelete").innerHTML = "Yakin ingin hapus data "+nis+"?";
 }
 
 //AJAX EDIT PETUGAS

@@ -38,7 +38,7 @@
         Alamat = ?,
         NoTelp = ?
         WHERE NIS= ?");
-        $stmt3 ->bind_param('ssssss',$nis,$password,$namalengkap,$alamat,$telp,$nis);
+        $stmt3 ->bind_param('sssss',$nis,$namalengkap,$alamat,$telp,$nis);
         $stmt3->execute();
         $stmt3->get_result();
         if ($conn->affected_rows> 0) {
@@ -46,7 +46,7 @@
 
          //Insert data
           $level="Siswa";
-          $stmt4 = $conn->prepare("INSERT INTO tblogin VALUES(NULL, ?, MD5(?), ?)"); 
+          $stmt4 = $conn->prepare("INSERT INTO tblogin VALUES('', ?, MD5(?), ?)"); 
           $stmt4 ->bind_param("sss",$nis,$password,$level);
           $stmt4 ->execute();
           $stmt4 ->get_result();

@@ -23,6 +23,15 @@ body{
 .reset{
   background-color: rgb(233, 85, 85)  !important;
 }
+.reset:hover{
+  background-color: rgb(221, 71, 71)  !important;
+}
+.reset-darker{
+  background-color: rgb(207, 61, 61)  !important;
+}
+.reset-darker:hover{
+  background-color: rgb(209, 44, 44)  !important;
+}
 .container{
   margin-left: 170px;
   padding: 16px;
@@ -81,7 +90,7 @@ input[type=text], input[type=number],input[type=password], select, textarea {
   resize: vertical;
   font-size: 12pt;
 }
-input[type=submit], input[type=reset]{
+.form-button {
   background-color: #6495ed;
   color: white;
   padding: 10px 15px;
@@ -90,8 +99,13 @@ input[type=submit], input[type=reset]{
   cursor: pointer;
 }
 input[type=submit]{
-  width: 80px;
   font-size: 12pt;
+}
+.form-button:hover {
+  background-color: #4f79c7;
+}
+input:read-only {
+  background-color: #c0c0c0;
 }
 .button{
   text-decoration: none;
@@ -146,12 +160,6 @@ input[type=submit]{
 .a-left{
   text-align: left;
  }
-input[type=submit]:hover {
-  background-color: #4f79c7;
-}
-input:read-only {
-  background-color: #c0c0c0;
-}
 .box{
   width: 700px;
   margin: 0px auto;
@@ -249,6 +257,13 @@ input:read-only {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+}
+.modal-confirm-content{
+  background-color: #fefefe;
+  margin: 5% auto 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 400px;
 }
 .close{
   color: #aaa;
