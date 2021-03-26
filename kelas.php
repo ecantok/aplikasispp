@@ -17,7 +17,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php  nav("kelas") ?>
+<?php require_once 'navbar.php'; ?>
 <div class="container">
     <?php 
     $stmt = $conn ->prepare("SELECT tbkelas.*, tbspp.TahunAjaran, tbspp.Tingkat FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP");

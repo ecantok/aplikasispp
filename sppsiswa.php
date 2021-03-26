@@ -20,16 +20,16 @@ $result = $conn->query("SELECT * FROM tbsiswa");
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Siswa || Pembayaran SPP</title>
+  <title>Data SPP Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php  include_once 'navbar.php' ?>
 <div class="container">
     
-    <h2>Data Siswa</h2>
+    <h2>Data SPP Siswa</h2>
     <div class="mb">
-      <button id="tampilModal" class="button">Tambah Data Siswa</button>
+      <button id="tampilModal" class="button">Tambah Data SPP Siswa</button>
     </div>
     <div>
       <?php $app->pesanDialog(); ?>

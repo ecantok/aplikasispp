@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <?php include_once('navbar.php'); nav("home") ?>
+  <?php include_once('navbar.php');?>
   <div class="container">
     <h1>Selamat datang di Aplikasi Pembayaran SPP!</h1>
   </div>

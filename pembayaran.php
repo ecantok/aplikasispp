@@ -17,7 +17,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php  nav("pembayaran") ?>
+<?php require_once 'navbar.php'; ?>
 <div class="container">
     
     <h2>Entri Pembayaran Spp</h2>

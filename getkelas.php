@@ -1,5 +1,9 @@
 <?php
 require_once "app.php";
+if ($selectedUrl == "getkelas.php") {
+  //Don't come here
+  header("location:index.php");
+}
 if (!empty($_GET['kodekelas'])) {
   $KodeKelas = $_GET['kodekelas'];
   $stmt = $conn->prepare("SELECT * FROM tbkelas WHERE KodeKelas = ?");

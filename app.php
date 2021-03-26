@@ -1,7 +1,12 @@
 <?php
+
+  // URL
+  $url = explode('/', $_SERVER['REQUEST_URI']);
+  $selectedUrl = $url[2];
+
  //Koneksi SQL
- $conn = new mysqli('localhost', 'root', '', 'dbspprpl3');
- if ($conn->connect_error) {
+  $conn = new mysqli('localhost', 'root', '', 'dbspp');
+  if ($conn->connect_error) {
    die("Koneksi mysql error : ".$conn->connect_error);
   }
   

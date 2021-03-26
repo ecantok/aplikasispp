@@ -1,6 +1,5 @@
 <?php
 require_once 'app.php';
-require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
 if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   header("Location:index.php");
@@ -17,7 +16,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php  nav("petugas") ?>
+<?php include_once "navbar.php" ?>
 <div class="container">
     <?php 
     $stmt = $conn ->prepare("SELECT * FROM tbpetugas");

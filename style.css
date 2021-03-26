@@ -24,13 +24,15 @@ body{
   background-color: rgb(233, 85, 85)  !important;
 }
 .container{
-  margin-left: 154px;
+  margin-left: 170px;
   padding: 16px;
 }
 .navbar{
- width : 144px;
+ width : auto;
  height: 100vh; 
  position: fixed;
+ padding-left: 8px;
+ padding-right: 8px;
  background-color: #333;
  display: flex;
  flex-direction: column;
@@ -38,17 +40,16 @@ body{
 }
 .selected{
   color: white !important;
-  background-color: rgb(63, 63, 63);
+  /* background-color: rgb(63, 63, 63); */
 }
 
 .nav-link:hover, .nav-link:active{
-  background-color: rgb(73, 73, 73);
+  /* background-color: rgb(73, 73, 73); */
   color: white;
   cursor: pointer;
 }
 .nav-link{
   color: lightgrey;
-  text-indent: 12px;
   padding-top: 8px;
   padding-bottom: 8px;
   width: 100%;
@@ -168,6 +169,7 @@ input:read-only {
 .table-view{
   border-collapse: collapse;
   border-spacing: 0;
+  font-size: 11pt;
   /* margin: 5px  10px auto; */
 }
 .table-view thead th{
@@ -215,7 +217,7 @@ input:read-only {
 }
 .navtop{
   margin-top: 0;
-  margin-left: 144px;
+  margin-left: 160px;
   display: flex;
   flex-direction: row;
   list-style: none;

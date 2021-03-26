@@ -34,7 +34,6 @@
         //Update data
         $stmt3 = $conn->prepare("UPDATE tbsiswa SET 
         Username = ?,
-        `Password` = MD5(?),
         NamaSiswa = ?,
         Alamat = ?,
         NoTelp = ?

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <?php include_once('navbar.php'); nav("laporan") ?>
+  <?php require_once 'navbar.php'; ?>
   <div class="container">
     <h2>Generate Laporan</h2>
     <ul>

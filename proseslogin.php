@@ -25,9 +25,13 @@ if (!empty($_POST)) {
       } else if ($data['Level'] == "Petugas") {
         $_SESSION['username'] = $data['Username'];
         $_SESSION['iduser'] = $data['KodeLogin'];
-      } else {
+      } else if ($data['Level'] == "Admin") {
         $_SESSION['username'] = $data['Username'];
         $_SESSION['iduser'] = $data['KodeLogin'];
+      } else {
+        $app->setpesan("Maaf Anda tidak terdaftar!","","red");
+        header("Location: index.php");
+        exit;
       }
       $_SESSION['level'] = $data['Level'];
       header("Location: index.php");

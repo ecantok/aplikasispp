@@ -1,6 +1,5 @@
 <?php
 require_once 'app.php';
-require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
 if (!$session) {
   header("Location:index.php");
@@ -18,7 +17,7 @@ if (!$session) {
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php  nav("history") ?>
+<?php require_once 'navbar.php'; ?>
 <div class="container">
     <h2>History Pembayaran Spp</h2>
     <div>
