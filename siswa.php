@@ -25,7 +25,7 @@ $result = $conn->query("SELECT * FROM tbsiswa WHERE NIS != 1");
 </head>
 <body>
 <?php  include_once 'navbar.php' ?>
-<div class="container">
+  <div class="container">
     
     <h2>Data Siswa</h2>
     <div class="mb">
@@ -110,6 +110,7 @@ $result = $conn->query("SELECT * FROM tbsiswa WHERE NIS != 1");
       </div>
     </div>
   </div>
+  <?php require_once "footer.php";?>
 </body>
 <script src="script.js"></script>
 </html>

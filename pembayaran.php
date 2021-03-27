@@ -133,6 +133,8 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     echo "<p>Siswa yang dicari tidak ditemukan.</p> ";
   }} ?>
   <p><i>Pembayaran SPP dilakukan dengan cara Mencari Tagihan Siswa dengan NIS melalui form diatas, kemudian dilakukan entri pembayaran</i></p>
+</div>
+  <?php require_once "footer.php";?>
 </body>
 <script src="script.js"></script>
 </html>

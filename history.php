@@ -143,6 +143,8 @@ if (!$session) {
   }
   ?>
   <p><i>Histroy SPP hanya bisa melihat data SPP dengan NIS <?=($app->cekPemissionLevel($levelUser,'Siswa'))? "Anda":"yang dicari. Jika ingin melakukan entri pembayaran bisa dilakukan di halaman <a href='pembayaran.php{$get}'> berikut</a>";?></i></p>
+  </div>
+  <?php require_once "footer.php";?>
 </body>
 <script src="script.js"></script>
 </html>

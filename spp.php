@@ -18,7 +18,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
 </head>
 <body>
 <?php require_once 'navbar.php'; ?>
-<div class="container">
+  <div class="container">
     <?php 
     $stmt = $conn ->prepare("SELECT * FROM tbspp ORDER BY TahunAjaran ASC");
     $stmt->execute();
@@ -81,7 +81,8 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
         </form>
       </div>
     </div>
-    </div>
+  </div>
+  <?php require_once "footer.php";?>
 </body>
 <script src="script.js"></script>
 </html>

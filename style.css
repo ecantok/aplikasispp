@@ -7,6 +7,7 @@
 }
 *{
   font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
 }
 body{
   margin: 0;
@@ -35,6 +36,16 @@ body{
 .container{
   margin-left: 170px;
   padding: 16px;
+  min-height: calc(100vh - 58px - 60px);
+}
+.footer{
+  /* You have no idea how long to make this correct */
+  margin-left: 160px;
+  text-align: center;
+  background-color: #3d3d3d;
+  color: lightgrey;
+  padding: 5px;
+  z-index: 69;
 }
 .navbar{
  width : auto;
@@ -224,8 +235,9 @@ input:read-only {
   -webkit-transform: scaleX(-1);transform: scaleX(-1); 
 }
 .navtop{
-  margin-top: 0;
+  margin-top: 0px;
   margin-left: 160px;
+  margin-bottom: 0px;
   display: flex;
   flex-direction: row;
   list-style: none;

@@ -18,7 +18,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
 </head>
 <body>
 <?php require_once 'navbar.php'; ?>
-<div class="container">
+  <div class="container">
     <?php 
     $stmt = $conn ->prepare("SELECT tbkelas.*, tbspp.TahunAjaran, tbspp.Tingkat FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP");
     $stmt->execute();
@@ -85,7 +85,8 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
         </form>
       </div>
     </div>
-    </div>
+  </div>
+  <?php require_once 'footer.php' ?>
 </body>
 <script src="script.js"></script>
 </html>

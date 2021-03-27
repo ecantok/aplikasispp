@@ -16,8 +16,8 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php include_once "navbar.php" ?>
-<div class="container">
+  <?php include_once "navbar.php"; ?>
+  <div class="container">
     <?php 
     $stmt = $conn ->prepare("SELECT * FROM tbpetugas");
     $stmt->execute();
@@ -97,7 +97,8 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
         </form>
       </div>
     </div>
-    </div>
+  </div>
+  <?php require_once "footer.php";?>
 </body>
 <script src="script.js"></script>
 </html>

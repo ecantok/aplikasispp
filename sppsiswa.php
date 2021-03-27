@@ -30,6 +30,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
 </head>
 <body>
 <?php  include_once 'navbar.php' ?>
+
   <div class="container">
     <h2>Data SPP Siswa</h2>
     
@@ -78,17 +79,16 @@ $result = $conn->query("SELECT * FROM tbsiswa");
         </thead>
         <tbody>
           <?php $i=1; while ($row = $resultSpp ->fetch_assoc() ):?>
-            <tr>
-              <td><?=$i ?></td>
-              <td><?=$row['Tingkat']?></td>
-              <td><?=$row['Jurusan'] ?></td>
-              <td><?=$row['NamaKelas'] ?></td>
-              <td><?=$row['BesarBayaran'] ?></td>
-              <td>
-                <span><a href="sppsiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
-              </td>
-            </tr>
-          </span>
+          <tr>
+            <td><?=$i ?></td>
+            <td><?=$row['Tingkat']?></td>
+            <td><?=$row['Jurusan'] ?></td>
+            <td><?=$row['NamaKelas'] ?></td>
+            <td><?=$row['BesarBayaran'] ?></td>
+            <td>
+              <span><a href="sppsiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
+            </td>
+          </tr>
         </li>
           <?php $i++; endwhile; ?>
         </tbody>
@@ -104,40 +104,71 @@ $result = $conn->query("SELECT * FROM tbsiswa");
       $resultKelas = $stmtKelas->get_result();
       $dataKelas = $resultKelas->fetch_assoc();
       if ($resultKelas->num_rows != 0) {
-        var_dump($dataKelas);
-  ?>
-  <a href="sppsiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
-    <h3>Biodata Kelas</h3>
-    <table>
-      <tr>
-        <td>Nama Kelas</td>
-        <td>:</td>
-        <td><?= $dataKelas['NamaKelas'] ?></td>
-        <td style="width: 20px;"></td>
-        <td>Jurusan</td>
-        <td>:</td>
-        <td><?= $dataKelas['Jurusan'] ?></td>
-      </tr>
-      <tr>
-        <td>Tahun Ajaran</td>
-        <td>:</td>
-        <td><?= $dataKelas['TahunAjaran'] ?></td>
-        <td style="width: 20px;"></td>
-        <td>Tingkat</td>
-        <td>:</td>
-        <td><?= $dataKelas['Tingkat'] ?></td>
-      </tr>
-      <tr>
-        <td>Jumlah Bayaran</td>
-        <td>:</td>
-        <td><?= "Rp.".$app->numberformat($dataKelas['BesarBayaran']) ?></td>
-      </tr>
-    </table>
-    
-    <h2>SPP Siswa Kelas <?=$kelas?></h2>
-    <?php 
-      $queryCekSppSiswa = "SELECT * FROM wip";
     ?>
+    <a href="sppsiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
+    <h2>Biodata Kelas</h2>
+    <div style="overflow-x: auto;">
+      <table>
+        <tr>
+          <td>Nama Kelas</td>
+          <td>:</td>
+          <td><?= $dataKelas['NamaKelas'] ?></td>
+          <td style="width: 20px;"></td>
+          <td>Jurusan</td>
+          <td>:</td>
+          <td><?= $dataKelas['Jurusan'] ?></td>
+        </tr>
+        <tr>
+          <td>Tahun Ajaran</td>
+          <td>:</td>
+          <td><?= $dataKelas['TahunAjaran'] ?></td>
+          <td style="width: 20px;"></td>
+          <td>Tingkat</td>
+          <td>:</td>
+          <td><?= $dataKelas['Tingkat'] ?></td>
+        </tr>
+        <tr>
+          <td>Jumlah Bayaran</td>
+          <td>:</td>
+          <td><?= "Rp.".$app->numberformat($dataKelas['BesarBayaran']) ?></td>
+        </tr>
+      </table>
+    </div>
+
+    <hr>
+    <!-- Data Siswa di kelas... -->
+    <h2>Data Siswa di Kelas <?=$dataKelas['NamaKelas'] ?></h2>
+    <div id="tableId" style="overflow-x:auto;">
+      <table class="table-view">
+        <thead>
+          <th>No.</th>
+          <th>NIS</th>
+          <th>Nama</th>
+          <th>Action</th>
+        </thead>
+        <tbody>
+          <?php
+            $querySppSiswa = "SELECT tbsppsiswa.kode_spp_siswa, tbsppsiswa.NIS, tbsiswa.NamaSiswa FROM tbsppsiswa JOIN tbsiswa ON tbsppsiswa.NIS = tbsiswa.NIS JOIN tbkelas ON tbsppsiswa.kodekelas = tbkelas.KodeKelas WHERE tbsppsiswa.kodekelas = ?";
+            $stmtSppSiswa= $conn->prepare($querySppSiswa);
+            $stmtSppSiswa->bind_param("s", $kelas);
+            $stmtSppSiswa->execute();
+            
+            $resultSppSiswa = $stmtSppSiswa->get_result();
+            $i=1; while ($dataSppSiswa = $resultSppSiswa ->fetch_assoc() ):
+          ?>
+          <tr>
+            <td><?=$i ?></td>
+            <td><?=$dataSppSiswa['NIS'] ?></td>
+            <td><?=$dataSppSiswa['NamaSiswa'] ?></td>
+            <td>
+              <span><a href="deletesppsiswa.php?id=<?= $dataSppSiswa['kode_spp_siswa'] ?>&NIS=<?= $dataKelas['NIS'] ?>"> Hapus</a></span>
+            </td>
+          </tr>
+        </li>
+          <?php $i++; endwhile; ?>
+        </tbody>
+      </table>
+    </div>
 
     <?php }} ?>
 
@@ -171,6 +202,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
       </div>
     </div>
   </div>
+  <?php require_once "footer.php" ?>
 </body>
 <script src="script.js"></script>
 </html>
