@@ -34,7 +34,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     <form action="" method="get">
       <div class="flex">
         <div>
-          <label for="tahunajaran"><b>NIS</b></label>
+          <label for="nis"><b>NIS</b></label>
           <?php $nis = (!empty($_GET['nis'])&& $_GET['nis'] != '')? $_GET['nis']: ''; ?>
           <input type="text" name="nis" id="nis" value="<?=$nis?>">
 

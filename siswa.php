@@ -12,7 +12,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
 //   $app->setpesan("Mohon Masukan Data Kelas Terlebih Dahulu");
 //   header("Location: kelas.php");
 // }
-$result = $conn->query("SELECT * FROM tbsiswa");
+$result = $conn->query("SELECT * FROM tbsiswa WHERE NIS != 1");
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -55,8 +55,10 @@ if (url == "kelas.php") {
 span.onclick = function () {
   modal.style.display="none";
 }
-spanConfirm.onclick = function () {
-  modalConfirmDelete.style.display="none";
+if (spanConfirm) {
+  spanConfirm.onclick = function () {
+    modalConfirmDelete.style.display="none";
+  }
 }
 
 window.onclick = function (event) {

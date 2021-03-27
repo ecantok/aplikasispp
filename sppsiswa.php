@@ -5,6 +5,10 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   header("Location:index.php");
   exit;
 }
+$parameter1 = (!empty($_GET['tahunajaran'])&& $_GET['tahunajaran'] != '');
+$parameter2 = (!empty($_GET['kelas'])&& $_GET['kelas'] != '');
+$selectedTahunAjaran = ($parameter1)? $_GET['tahunajaran']:'' ;
+$kelas = ($parameter2)? $_GET['kelas']:'' ;
 // $query = ("SELECT tbkelas.*, tbspp.TahunAjaran FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP");
 // $resultKelas = $conn->query($query);
 // $cekKelas = ($resultKelas -> num_rows == 0);
@@ -22,50 +26,120 @@ $result = $conn->query("SELECT * FROM tbsiswa");
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data SPP Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
+  <?php $app->pesanDialog(); ?>
 </head>
 <body>
 <?php  include_once 'navbar.php' ?>
-<div class="container">
-    
+  <div class="container">
     <h2>Data SPP Siswa</h2>
-    <div class="mb">
+    
+    <!-- FORM TAHUN AJARAN -->
+    <div>
+      <form method="get">
+        <div class="flex">
+          <div>
+            <label for="tahunajaran"><b>Tahun Ajaran</b></label>
+            <select id="tahunajaran" name="tahunajaran">
+              <?php 
+                $app->buatTahunAjaran($selectedTahunAjaran);
+              ?>
+            </select>
+          </div>
+          <input style="margin: 15px 10px;" type="submit" value="Lihat">
+        </div>
+      </form>
+    </div>
+
+    <hr>
+    <div style="display: none;" class="mb">
       <button id="tampilModal" class="button">Tambah Data SPP Siswa</button>
     </div>
-    <div>
-      <?php $app->pesanDialog(); ?>
-    </div>
+
+    <?php
+      if (($parameter1&&!$parameter2)){
+      if ($parameter1) {
+        $stmtSpp = $conn->prepare("SELECT tbkelas.*, tbspp.* FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE tbspp.TahunAjaran = ?");
+        $stmtSpp->bind_param("s",$selectedTahunAjaran);
+        $stmtSpp->execute();
+        $resultSpp = $stmtSpp->get_result();
+        $dataSpp = $resultSpp->fetch_assoc();
+        if ($resultSpp->num_rows != 0) {
+    ?>
+    <h2>Data Kelas</h2>
     <div id="tableId" style="overflow-x:auto;">
       <table class="table-view">
         <thead>
           <th>No.</th>
-          <th>NIS</th>
-          <th>Nama Siswa</th>
-          <th>Alamat</th>
-          <th>No. Telp</th>
-          <th>Terdaftar</th>
+          <th>Tingkat</th>
+          <th>Jurusan</th>
+          <th>Nama Kelas</th>
+          <th>Besar Bayaran</th>
           <th>Action</th>
         </thead>
         <tbody>
-          <?php $i=1; while ($row = $result ->fetch_assoc() ):?>
+          <?php $i=1; while ($row = $resultSpp ->fetch_assoc() ):?>
             <tr>
-              <td><?=$i;?></td>
-              <td><?=$row['NIS'] ?></td>
-              <td><?=$row['NamaSiswa'] ?></td>
-              <td><?=($row['Alamat'] !='')?$row['Alamat'] :'<div style="text-align: center;">-</div>';?></td>
-              <td><?=($row['NoTelp'] !='')?$row['NoTelp'] :'<div style="text-align: center;">-</div>';?></td>
-              <td style="text-align: center;"><?php
-                echo ($row['Username']=="") ? "BELUM TERDAFTAR" : "TERDAFAR";
-              ?></td>
+              <td><?=$i ?></td>
+              <td><?=$row['Tingkat']?></td>
+              <td><?=$row['Jurusan'] ?></td>
+              <td><?=$row['NamaKelas'] ?></td>
+              <td><?=$row['BesarBayaran'] ?></td>
               <td>
-                <span><button class="blue" onclick="editSiswa('<?=$row['NIS'] ?>')">Edit</button></span>
-                <span><button class="red" onclick="deleteSiswa(<?= $row['NIS']?>)" >Delete</button></span>
+                <span><a href="sppsiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
               </td>
             </tr>
+          </span>
+        </li>
           <?php $i++; endwhile; ?>
         </tbody>
       </table>
       <div id="respon"></div>
     </div>
+    <?php } else {
+    echo "<p>Data Kelas untuk tahun ajaran tersebut kosong.</p> ";
+    }} } elseif ($parameter1 && $parameter2) {
+      $stmtKelas = $conn->prepare("SELECT tbkelas.*, tbspp.TahunAjaran, tbspp.Tingkat, tbspp.BesarBayaran FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE KodeKelas = ?");
+      $stmtKelas->bind_param("s",$kelas);
+      $stmtKelas->execute();
+      $resultKelas = $stmtKelas->get_result();
+      $dataKelas = $resultKelas->fetch_assoc();
+      if ($resultKelas->num_rows != 0) {
+        var_dump($dataKelas);
+  ?>
+  <a href="sppsiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
+    <h3>Biodata Kelas</h3>
+    <table>
+      <tr>
+        <td>Nama Kelas</td>
+        <td>:</td>
+        <td><?= $dataKelas['NamaKelas'] ?></td>
+        <td style="width: 20px;"></td>
+        <td>Jurusan</td>
+        <td>:</td>
+        <td><?= $dataKelas['Jurusan'] ?></td>
+      </tr>
+      <tr>
+        <td>Tahun Ajaran</td>
+        <td>:</td>
+        <td><?= $dataKelas['TahunAjaran'] ?></td>
+        <td style="width: 20px;"></td>
+        <td>Tingkat</td>
+        <td>:</td>
+        <td><?= $dataKelas['Tingkat'] ?></td>
+      </tr>
+      <tr>
+        <td>Jumlah Bayaran</td>
+        <td>:</td>
+        <td><?= "Rp.".$app->numberformat($dataKelas['BesarBayaran']) ?></td>
+      </tr>
+    </table>
+    
+    <h2>SPP Siswa Kelas <?=$kelas?></h2>
+    <?php 
+      $queryCekSppSiswa = "SELECT * FROM wip";
+    ?>
+
+    <?php }} ?>
 
     <!-- MODAL BOX -->
     <div class="modal" id="modalBox">
@@ -96,7 +170,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
         </form>
       </div>
     </div>
-    </div>
+  </div>
 </body>
 <script src="script.js"></script>
 </html>
