@@ -1,8 +1,8 @@
 <?php
 
 require_once 'app.php';
-if (!$session && cekPemissionLevel($levelUser)) {
-  header("Location:login.php");
+if (!$session && $app->cekPemissionLevel($levelUser)) {
+  header("Location:index.php");
 }
 if (!empty($_GET['id'])) {
   $id = $_GET["id"];

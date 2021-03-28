@@ -112,6 +112,12 @@ public function cekReturnForm($returnedform)
 private $bulan = [
   "Juli","Agustus","September","Oktober","November","Desember", "Januari","Februari","Maret",
 "April","Mei","Juni"];
+
+  public function getBulan()
+  {
+    return $this->bulan;
+  }
+
 function buatBulan($selected = "")
 {
   

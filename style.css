@@ -40,6 +40,7 @@ body{
 }
 .footer{
   /* You have no idea how long to make this correct */
+  margin-top: 50px;
   margin-left: 160px;
   text-align: center;
   background-color: #3d3d3d;
@@ -269,6 +270,13 @@ input:read-only {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+}
+.modal-content-small{
+  background-color: #fefefe;
+  margin: 1% auto 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
 }
 .modal-confirm-content{
   background-color: #fefefe;

@@ -50,6 +50,8 @@ if (url == "kelas.php") {
   
 }else if(url == "history.php") {
   
+} else if (url == "sppsiswa.php") {
+  // form[0] = document.getElementById()
 }
 
 span.onclick = function () {
@@ -71,7 +73,12 @@ window.onclick = function (event) {
 
 //BAGIAN MODAL TAMBAH DATA
 btn.onclick = function () {
-  tampilModal("Tambah Data","tambah"+url,"Simpan");
+  var tambahUrl = "tambah"+url;
+  var modalTitle = "Tambah Data";
+  if (url == "sppsiswa.php") {
+    modalTitle = "Tambah Siswa";
+  }
+  tampilModal(modalTitle,tambahUrl,"Simpan");
   //COPYRIGHT © DAVID RESANT0
   for (let i = 0; i < form.length; i++) {
     var element = form[i];

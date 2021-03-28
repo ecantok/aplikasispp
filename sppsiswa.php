@@ -52,9 +52,6 @@ $result = $conn->query("SELECT * FROM tbsiswa");
     </div>
 
     <hr>
-    <div style="display: none;" class="mb">
-      <button id="tampilModal" class="button">Tambah Data SPP Siswa</button>
-    </div>
 
     <?php
       if (($parameter1&&!$parameter2)){
@@ -138,6 +135,9 @@ $result = $conn->query("SELECT * FROM tbsiswa");
     <hr>
     <!-- Data Siswa di kelas... -->
     <h2>Data Siswa di Kelas <?=$dataKelas['NamaKelas'] ?></h2>
+    <div style="display: block;" class="mb">
+      <button id="tampilModal" class="button">Tambah Siswa</button>
+    </div>
     <div id="tableId" style="overflow-x:auto;">
       <table class="table-view">
         <thead>
@@ -154,18 +154,21 @@ $result = $conn->query("SELECT * FROM tbsiswa");
             $stmtSppSiswa->execute();
             
             $resultSppSiswa = $stmtSppSiswa->get_result();
-            $i=1; while ($dataSppSiswa = $resultSppSiswa ->fetch_assoc() ):
+            if ($resultSppSiswa->num_rows == 0) {
+              echo "<td colspan = '4' style='text-align: center;'><b>Data Kosong</b></td>";
+            }
+            $cekSiswa = []; $i=1; while ($dataSppSiswa = $resultSppSiswa ->fetch_assoc() ):
           ?>
           <tr>
             <td><?=$i ?></td>
             <td><?=$dataSppSiswa['NIS'] ?></td>
             <td><?=$dataSppSiswa['NamaSiswa'] ?></td>
             <td>
-              <span><a href="deletesppsiswa.php?id=<?= $dataSppSiswa['kode_spp_siswa'] ?>&NIS=<?= $dataKelas['NIS'] ?>"> Hapus</a></span>
+              <span><a href="deletesppsiswa.php?id=<?= $dataSppSiswa['kode_spp_siswa'] ?>"> Hapus</a></span>
             </td>
           </tr>
         </li>
-          <?php $i++; endwhile; ?>
+          <?php array_push($cekSiswa, $dataSppSiswa['NIS']); $i++; endwhile; ?>
         </tbody>
       </table>
     </div>
@@ -174,31 +177,46 @@ $result = $conn->query("SELECT * FROM tbsiswa");
 
     <!-- MODAL BOX -->
     <div class="modal" id="modalBox">
-      <div class="modal-content">
+      <div class="modal-content-small">
         <span class="close">&times;</span>
-        <h4><span id="modal-title">Tambah Data</span> Siswa</h4>
-        <form id="formModal" action="prosestambahsiswa.php" method="post">
-          <input type="hidden" id="hiddenNis" name="hiddenNis" value="">
-          <label for="NIS"><b>NIS</b></label>
-          <input type="number" placeholder="Masukkan NIS" name="NIS" id="nis" required>
-
-          <label for="nama"><b>Nama Lengkap</b></label>
-          <input type="text" placeholder="Masukkan Nama Lengkap" id="nama" name="nama" required>
-
-          <label for="alamat"><b>Alamat</b></label>
-          <input type="text" placeholder="Masukkan Alamat" id="alamat" name="alamat">
-
-          <label for="telp"><b>No Telp</b></label>
-          <input type="text" placeholder="Masukkan Telp" id="telp" name="telp">
-
-          <!-- <label for="kelas"><b>Kelas</b></label>
-          <select id="kelas" name="kelas">
-            <?php //while($dataKelas = $resultKelas->fetch_assoc()): ?>
-            <option value="<?//=$dataKelas['KodeKelas']?>"><?//=$dataKelas['TahunAjaran'] ?> | <?//= $dataKelas['NamaKelas'] ?></option>
-            <?php //endwhile; ?>
-          </select> -->
-          <button id="tombolAksi" type="submit">Simpan</button>
+        <h4><span id="modal-title">Tambah Siswa</span></h4>
+        <?php $resultSiswa=$conn->query("SELECT tbsiswa.NIS, tbsiswa.Namasiswa FROM tbsiswa WHERE nis != 1");
+        if ($resultSiswa->num_rows > 0) {
+          ?>
+        <form id="formModal" action="asdfghjkl" method="post">
+          <input type="hidden" name="kelas" value="<?=$kelas ?>">
+          <table style="border: 1px solid #ccc;">
+            <thead>
+              <th></th>
+              <th>NIS</th>
+              <th>Nama SIswa</th>
+            </thead>
+            <tbody>
+              <?php
+                while($row=mysqli_fetch_array($resultSiswa)){
+                    if (in_array($row['NIS'],$cekSiswa)) {
+                      continue;
+                    }
+                    ?>
+                    <tr>
+                      <td><input type="checkbox" value="<?php echo $row['NIS']; ?>" name="nis[]"></td>
+                      <td><?= $row['NIS']; ?></td>
+                      <td><?= $row['Namasiswa']; ?></td>
+                    </tr>
+                    <?php
+                  }
+              ?>
+              
+            </tbody>
+          </table>
+          <br>
+          <input class="button" id="tombolAksi" type="submit" value="Tambah Siswa">
         </form>
+        <?php
+        } else {
+          echo "Data Siswa kosong";
+        }
+        ?>
       </div>
     </div>
   </div>
