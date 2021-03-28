@@ -11,6 +11,7 @@ if ($selectedUrl == "navbar.php") {
       if ($app->cekPemissionLevel($levelUser)):
     ?>
     <a href="index.php" class="nav-link<?=($selectedUrl == "index.php")? " selected": "" ; ?>">Home</a>
+    <a href="datasekolah.php" class="nav-link<?=($selectedUrl == "datasekolah.php")? " selected": "" ; ?>">Data Sekolah</a>
     <a href="petugas.php" class="nav-link<?=($selectedUrl == "petugas.php")? " selected": "" ; ?>">Data Petugas</a>
     <a href="spp.php" class="nav-link<?=($selectedUrl == "spp.php")? " selected": "" ; ?>">Data SPP</a>
     <a href="kelas.php" class="nav-link<?=($selectedUrl == "kelas.php")? " selected": "" ; ?>">Data Kelas</a>

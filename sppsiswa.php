@@ -60,7 +60,6 @@ $result = $conn->query("SELECT * FROM tbsiswa");
         $stmtSpp->bind_param("s",$selectedTahunAjaran);
         $stmtSpp->execute();
         $resultSpp = $stmtSpp->get_result();
-        $dataSpp = $resultSpp->fetch_assoc();
         if ($resultSpp->num_rows != 0) {
     ?>
     <h2>Data Kelas</h2>

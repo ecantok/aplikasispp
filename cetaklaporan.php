@@ -81,15 +81,6 @@ require_once 'app.php';
 </head>
 <body>
 
-<center>
-  <h2>Aplikasi Pembayaran SPP</h2>
-  <h6>
-    Jalan GatotSubroto, No. 25 <br> 
-    Denpasar - Bali<br>
-    Telp : 081234567890<br>
-  </h6>
-  <h3>Data <?=$title?></h3>
-</center>
 <?php
     if (!empty($_GET['nis'])&& $_GET['nis'] != '') {
       $stmtSiswa = $conn->prepare("SELECT tbsiswa.*, tbkelas.*, tbspp.* FROM tbsiswa JOIN tbkelas ON tbsiswa.Kodekelas = tbkelas.KodeKelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE NIS = ?");

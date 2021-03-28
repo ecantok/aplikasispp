@@ -1,5 +1,5 @@
 <?php
-
+  define("BASEURL", "http://localhost/aplikasispp");
   // URL
   $url = explode('/', $_SERVER['REQUEST_URI']);
   $selectedUrl = $url[2];
