@@ -151,21 +151,28 @@
         </table>
       </div>
       <div class="middle">
-        <button class="button" id="tampilModal">Edit Data Sekolah</button>
+        <button class="form-button" id="tampilModal">Edit Data Sekolah</button>
       </div>
     </div>
     <!-- MODAL BOX -->
-    <div class="modal" id="modalBox">
+    <div class="modal remove-top" id="modalBox">
   
-      <div class="modal-content-big">
+      <div class="modal-content-medium">
         <span class="close">&times;</span>
         <h4><span id="modal-title">Edit Data Sekolah</span> </h4>
         <form action="" method="post" enctype="multipart/form-data">
           <input type="hidden" name="oldimage" value="<?= $data['gambar_logo'] ?>">
-          <img src="<?= BASEURL."/img/".$data['gambar_logo'] ?>" alt="Gambar Obat" class="img-fluid" width="150px" height="150px">
-          <label for="gambar">Gambar : </label>
+          <p>Logo Sekolah :</p>
           <br>
-          <input type="file" name="gambar" id="gambar" value="">
+          <div class="middle">
+            <img src="<?= BASEURL."/img/".$data['gambar_logo'] ?>" alt="Gambar Obat" class="img-fluid" width="150px" height="150px">
+
+          </div>
+          <div class="middle">
+            <label for="gambar" class="form-button">Edit Gambar </label>
+            <input type="file" style="display: none;" name="gambar" id="gambar" class="input-file"> </input>
+          </div>
+          <br>
           <br>
           <label for="namasekolah">Nama Sekolah : </label>
           <input type="text" name="namasekolah" id="namasekolah"  value="<?=$data["nama_sekolah"] ?>">
@@ -209,7 +216,6 @@
         modal.style.display = "none";
       } 
     }
-
   </script>
 </body>
 </html>

@@ -25,7 +25,7 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
   //Set Values
   $values = "";
   for ($i=0; $i < 6; $i++) { 
-    $values .= "(?, ?, ?, ?, '-'), ";
+    $values .= "(NULL, ?, ?, ?, '-'), ";
   }
   $values .= rtrim($values, ", ");
 
@@ -53,19 +53,19 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
     //MASUKKAN DATA SPP SISWA
     $queryCreateSpp = "INSERT INTO `tbpembayaran`(`KodePetugas`, `kode_spp_siswa`, `BulanDibayar`, `TahunDibayar`, `StatusPembayaran`) VALUES $values";
     $stmtCreateSpp = $conn -> prepare($queryCreateSpp);
-    $stmtCreateSpp -> bind_param('ssssssssssssssssssssssssssssssssssssssssssssssss', 
-    $idUser, $kodeSppSiswa, $bulan[0], $semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[1], $semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[2], $semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[3],$semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[4], $semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[5],$semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[6], $semester[0], 
-    $idUser, $kodeSppSiswa, $bulan[7], $semester[1], 
-    $idUser, $kodeSppSiswa, $bulan[8], $semester[1], 
-    $idUser, $kodeSppSiswa, $bulan[9], $semester[1], 
-    $idUser, $kodeSppSiswa, $bulan[10],$semester[1], 
-    $idUser, $kodeSppSiswa, $bulan[11], $semester[1] );
+    $stmtCreateSpp -> bind_param('ssssssssssssssssssssssssssssssssssss', 
+    $kodeSppSiswa, $bulan[0], $semester[0], 
+    $kodeSppSiswa, $bulan[1], $semester[0], 
+    $kodeSppSiswa, $bulan[2], $semester[0], 
+    $kodeSppSiswa, $bulan[3],$semester[0], 
+    $kodeSppSiswa, $bulan[4], $semester[0], 
+    $kodeSppSiswa, $bulan[5],$semester[0], 
+    $kodeSppSiswa, $bulan[6], $semester[0], 
+    $kodeSppSiswa, $bulan[7], $semester[1], 
+    $kodeSppSiswa, $bulan[8], $semester[1], 
+    $kodeSppSiswa, $bulan[9], $semester[1], 
+    $kodeSppSiswa, $bulan[10],$semester[1], 
+    $kodeSppSiswa, $bulan[11], $semester[1] );
     
     if ($stmtCreateSpp->error) {
       die(var_dump($stmtCreateSpp->error)."<br><br>");

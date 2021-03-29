@@ -93,29 +93,37 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
 <script src="script.js"></script>
 <script>
   const selectTh = document.getElementById("tahunajaran");
+  const address = "getdataspp.php";
   selectTh.addEventListener('change', (event)=> {
-      console.log(event);
       kodespp = event.target.value;
-      addr = "getdataspp.php";
       if (kodespp == "") {
         document.getElementById("tabel").innerHTML = "Data belum dipilih";
         return;
       } else {
-        if (window.XMLHttpRequest) {
-          //Browser untuk IE7+, Firefox, Chrome, and Opera, Safari
-          xmlhttp = new XMLHttpRequest();
-        } else {
-          //Browser untuk IE6, IE5
-          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function(){
-          if (this.readyState == 4 & this.status == 200) {
-            document.getElementById("respon").innerHTML = this.responseText;
-          }
-        };
-        xmlhttp.open("GET",""+addr+"?q="+kodespp,true);
-        xmlhttp.send();
+        ajax(address, kodespp);
       }
     });
+  <?php if (!empty($_GET['q'])) {
+    echo "
+    const kodesppGet = '{$_GET['q']}';
+    ajax(address, kodesppGet);
+    ";
+  }?>
+  function ajax(addr, param) {
+    if (window.XMLHttpRequest) {
+      //Browser untuk IE7+, Firefox, Chrome, and Opera, Safari
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      //Browser untuk IE6, IE5
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function(){
+      if (this.readyState == 4 & this.status == 200) {
+        document.getElementById("respon").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET",""+addr+"?q="+param,true);
+    xmlhttp.send();
+  }
 </script>
 </html>

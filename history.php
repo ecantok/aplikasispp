@@ -1,9 +1,12 @@
 <?php
 require_once 'app.php';
-//Cek hak akses, Defaultnya sudah ada admin
 if (!$session) {
   header("Location:index.php");
-  exit;
+}
+
+//Hanya Siswa yang bisa mengakses halaman ini
+if ($app->cekPemissionLevel($levelUser, "Siswa") === false) {
+  header("Location:index.php");
 }
 
 ?>
@@ -26,125 +29,80 @@ if (!$session) {
       ?>
         
     </div>
-    <div style="display: none;">
-      <button id="tampilModal">Tambah Data Kelas</button>
-    </div>
-    <?php if(!$app->cekPemissionLevel($levelUser,"Siswa")): ?>
-    <form method="get">
-      <div class="flex">
-        <div>
-          <label for="NIS"><b>NIS</b></label>
-          <?php $nis = (!empty($_GET['nis'])&& $_GET['nis'] != '')? $_GET['nis']: ''; ?>
-          <input type="text" name="nis" id="nis" value="<?=$nis?>">
-        </div>
-
-        <input style="margin: 15px 10px;" type="submit" value="Cari">
-      </div>
-    </form>
-    <hr>
+  <br>
+  <?php
+    $q = "SELECT tbspp.TahunAjaran, tbsppsiswa.kode_spp_siswa FROM tbsiswa 
+    JOIN tbsppsiswa ON tbsiswa.NIS = tbsppsiswa.nis
+    JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
+    JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP
+    WHERE tbsppsiswa.nis = ?
+    ";
+    $stmtTahunAjaran=$conn->prepare($q);
+    $stmtTahunAjaran->bind_param("i", $idUser);
+    $stmtTahunAjaran->execute();
+    $result = $stmtTahunAjaran->get_result();
+    if ($result->num_rows > 0) {
+    $result->fetch_all(MYSQLI_ASSOC);
+    ?> 
+    <select name='tahunajaran' id="tahunajaran" required>
+    <option value="">-Tahun Ajaran-</option>
     <?php
-    endif;
-    $verifikasi = (!empty($_GET['nis'])&& $_GET['nis'] != '');
-    $nis = null;
-      if ($verifikasi) {
-        $nis=$_GET['nis'];
+    foreach ($result as $data ) {
+      if (isset($_GET['kodespp'])&&!empty($_GET['kodespp']) && $_GET['kodespp']==$data['kode_spp_siswa']) {
+        echo "
+        <option value=".$data['kode_spp_siswa']." selected>".$data['TahunAjaran']."</option>
+        ";
       } else {
-        $verifikasi = $levelUser == "Siswa";
-        $nis = $idUser;
-      }  
-      if ($verifikasi) {
-        $stmtSiswa = $conn->prepare("SELECT tbsiswa.*, tbkelas.*, tbspp.* FROM tbsiswa JOIN tbkelas ON tbsiswa.Kodekelas = tbkelas.KodeKelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE NIS = ?");
-        $stmtSiswa->bind_param("s",$nis);
-        $stmtSiswa->execute();
-        $resultSiswa = $stmtSiswa->get_result();
-        $dataSiswa = $resultSiswa->fetch_assoc();
-
-        // $stmtSiswa = $conn->prepare("SELECT * FROM tbpembayaran WHERE nis = ?");
-        // $stmtSiswa->bind_param("s",$_GET['nis']);
-        // $stmtSiswa->execute();
-        // $resultSiswa = $stmtSiswa->get_result();
-        // $data 
-        if ($resultSiswa->num_rows != 0) {
-    ?>
-  <h3>Biodata Siswa</h3>
-  <table>
-      <tr>
-        <td>NIS</td>
-        <td>:</td>
-        <td><?= $dataSiswa['NIS'] ?></td>
-      </tr>
-      <tr>
-        <td>Nama Siswa</td>
-        <td>:</td>
-        <td><?= $dataSiswa['NamaSiswa'] ?></td>
-      </tr>
-      <tr>
-        <td>Kelas</td>
-        <td>:</td>
-        <td><?= $dataSiswa['NamaKelas'] ?></td>
-      </tr>
-      <tr>
-        <td>Tahun Ajaran</td>
-        <td>:</td>
-        <td><?= $dataSiswa['TahunAjaran'] ?></td>
-      </tr>
-      <tr>
-        <td>Jumlah Bayaran</td>
-        <td>:</td>
-        <td><?= "Rp.".$app->numberformat($dataSiswa['BesarBayaran']) ?></td>
-      </tr>
-  </table>
-  <hr>
-  <h3>Tagihan SPP Siswa</h3>
-  <div style="overflow-x: auto;">
-    <table class="table-view">
-      <thead>
-        <th>No.</th>
-        <th>Kode Pembayaran</th>
-        <th>Petugas</th>
-        <th>Tgl. Pembayaran</th>
-        <th>Bulan Dibayar</th>
-        <th>Tahun Dibayar</th>
-        <th>Status</th>
-      </thead>
-      <tbody>
-        
-        <?php $stmtSpp = $conn->prepare("SELECT tbpembayaran.*, tbpetugas.* FROM tbpembayaran JOIN tbpetugas ON tbpembayaran.KodePetugas = tbpetugas.KodePetugas WHERE NIS = ? ORDER BY `tbpembayaran`.`TahunDibayar` ASC");
-        $stmtSpp->bind_param("s",$nis);
-        $stmtSpp->execute();
-        $resultSPP = $stmtSpp->get_result();
-        $no = 1;
-        while ($dataSPP = $resultSPP->fetch_assoc()) {
-          ?>
-          <tr>
-            <td><?=$no?></td>
-            <td><?=$dataSPP['KodePembayaran']?></td>
-            <td><?=$dataSPP['NamaPetugas']?></td>
-            <td><?=$dataSPP['TglPembayaran']?></td>
-            <td><?=$dataSPP['BulanDibayar']?></td>
-            <td><?=$dataSPP['TahunDibayar']?></td>
-            <td style="text-align: center;"><?=$dataSPP['StatusPembayaran']?></td>
-            
-          </tr>
-          <?php
-          $no++;
-        }
-        ?>
-        
-      </tbody>
-    </table>
-  </div>
-  <?php } else {
-    echo "<p>Siswa yang dicari tidak ditemukan.</p> ";
-  }} 
-  $get = "";
-  if ($verifikasi) {
-    $get = "?nis=".$nis;
-  }
+        echo "
+        <option value=".$data['kode_spp_siswa'].">".$data['TahunAjaran']."</option>
+        ";
+      }
+    }
+    echo "</select>";
+    } else {
+      ?>
+        <p>Siswa tidak ditemukan</p>
+      <?php
+    }
   ?>
-  <p><i>Histroy SPP hanya bisa melihat data SPP dengan NIS <?=($app->cekPemissionLevel($levelUser,'Siswa'))? "Anda":"yang dicari. Jika ingin melakukan entri pembayaran bisa dilakukan di halaman <a href='pembayaran.php{$get}'> berikut</a>";?></i></p>
-  </div>
+  <div id="respon"></div>
+  <p class="text-info"><i>Histroy SPP melihat data SPP dengan NIS Anda</i></p>
+</div>
   <?php require_once "footer.php";?>
 </body>
-<script src="script.js"></script>
+<script>
+  const selectTh = document.getElementById("tahunajaran");
+  const address = "getdataspp.php";
+  selectTh.addEventListener('change', (event)=> {
+      kodespp = event.target.value;
+      if (kodespp == "") {
+        document.getElementById("tabel").innerHTML = "Data belum dipilih";
+        return;
+      } else {
+        ajax(address, kodespp);
+      }
+    });
+  <?php if (!empty($_GET['q'])) {
+    echo "
+    const kodesppGet = '{$_GET['q']}';
+    ajax(address, kodesppGet);
+    ";
+  }?>
+  function ajax(addr, param) {
+    if (window.XMLHttpRequest) {
+      //Browser untuk IE7+, Firefox, Chrome, and Opera, Safari
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      //Browser untuk IE6, IE5
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function(){
+      if (this.readyState == 4 & this.status == 200) {
+        document.getElementById("respon").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET",""+addr+"?q="+param,true);
+    xmlhttp.send();
+  }
+</script>
 </html>

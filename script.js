@@ -46,12 +46,6 @@ if (url == "kelas.php") {
   form[2] = document.getElementById("Tingkat");
   form[3] = document.getElementById("BesarBayaran");
   
-} else if(url == "pembayaran.php") {
-  
-}else if(url == "history.php") {
-  
-} else if (url == "sppsiswa.php") {
-  // form[0] = document.getElementById()
 }
 
 span.onclick = function () {
