@@ -28,7 +28,7 @@ if (!empty($_GET['id'])) {
     } else {
       $app->setpesan("Data SPP Gagal", "dihapus");
     }
-    $param = "sppsiswa.php?tahunajaran=$tahunAjaran&kelas=$kelas";
+    $param = "setsppsiswa.php?tahunajaran=$tahunAjaran&kelas=$kelas";
   header("Location:$param");
 }
 ?>

@@ -5,7 +5,7 @@
   $selectedUrl = $url[2];
 
  //Koneksi SQL
-  $conn = new mysqli('localhost', 'root', '', 'dbspp');
+  $conn = new mysqli('localhost', 'root', '', 'dbspp2');
   if ($conn->connect_error) {
    die("Koneksi mysql error : ".$conn->connect_error);
   }

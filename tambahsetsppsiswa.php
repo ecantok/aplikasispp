@@ -4,6 +4,7 @@ require_once 'app.php';
 if (!$session) {
   header("Location:login.php");
 }
+$param = "";
 $var;
 if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_POST['nis'])) {
   $nis = $_POST['nis'];
@@ -25,7 +26,7 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
   //Set Values
   $values = "";
   for ($i=0; $i < 6; $i++) { 
-    $values .= "(NULL, ?, ?, ?, '-'), ";
+    $values .= "(?, ?, ?, '-'), ";
   }
   $values .= rtrim($values, ", ");
 
@@ -51,7 +52,7 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
     $bulan = $app->getBulan();
     
     //MASUKKAN DATA SPP SISWA
-    $queryCreateSpp = "INSERT INTO `tbpembayaran`(`KodePetugas`, `kode_spp_siswa`, `BulanDibayar`, `TahunDibayar`, `StatusPembayaran`) VALUES $values";
+    $queryCreateSpp = "INSERT INTO `tbpembayaran`(`kode_spp_siswa`, `BulanDibayar`, `TahunDibayar`, `StatusPembayaran`) VALUES $values";
     $stmtCreateSpp = $conn -> prepare($queryCreateSpp);
     $stmtCreateSpp -> bind_param('ssssssssssssssssssssssssssssssssssss', 
     $kodeSppSiswa, $bulan[0], $semester[0], 
@@ -86,6 +87,6 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
   
   $param = "?tahunajaran=".urlencode($dataKelas['TahunAjaran'])."&kelas=$kelas";
 }
-  header("Location: sppsiswa.php$param");
+  header("Location: setsppsiswa.php$param");
 
 ?>

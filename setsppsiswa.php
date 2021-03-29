@@ -9,14 +9,6 @@ $parameter1 = (!empty($_GET['tahunajaran'])&& $_GET['tahunajaran'] != '');
 $parameter2 = (!empty($_GET['kelas'])&& $_GET['kelas'] != '');
 $selectedTahunAjaran = ($parameter1)? $_GET['tahunajaran']:'' ;
 $kelas = ($parameter2)? $_GET['kelas']:'' ;
-// $query = ("SELECT tbkelas.*, tbspp.TahunAjaran FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP");
-// $resultKelas = $conn->query($query);
-// $cekKelas = ($resultKelas -> num_rows == 0);
-// if ($cekKelas) {
-//   $app->setpesan("Mohon Masukan Data Kelas Terlebih Dahulu");
-//   header("Location: kelas.php");
-// }
-$result = $conn->query("SELECT * FROM tbsiswa");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +16,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data SPP Siswa || Pembayaran SPP</title>
+  <title>Set SPP Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
   <?php $app->pesanDialog(); ?>
 </head>
@@ -32,7 +24,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
 <?php  include_once 'navbar.php' ?>
 
   <div class="container">
-    <h2>Data SPP Siswa</h2>
+    <h2>Set SPP Siswa</h2>
     
     <!-- FORM TAHUN AJARAN -->
     <div>
@@ -56,7 +48,16 @@ $result = $conn->query("SELECT * FROM tbsiswa");
     <?php
       if (($parameter1&&!$parameter2)){
       if ($parameter1) {
-        $stmtSpp = $conn->prepare("SELECT tbkelas.*, tbspp.* FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE tbspp.TahunAjaran = ?");
+        $queryKelas = "SELECT 
+        tbkelas.KodeKelas, tbkelas.NamaKelas, tbkelas.Jurusan, 
+        tbspp.Tingkat, tbspp.TahunAjaran, tbspp.BesarBayaran, 
+        COUNT(tbsppsiswa.kode_spp_siswa) AS jumlahsiswa
+        FROM tbkelas 
+        LEFT JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP 
+        LEFT JOIN tbsppsiswa ON tbsppsiswa.kodekelas = tbkelas.KodeKelas 
+        WHERE tbspp.TahunAjaran = ? GROUP BY tbkelas.KodeKelas
+        ";
+        $stmtSpp = $conn->prepare($queryKelas);
         $stmtSpp->bind_param("s",$selectedTahunAjaran);
         $stmtSpp->execute();
         $resultSpp = $stmtSpp->get_result();
@@ -71,6 +72,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
           <th>Jurusan</th>
           <th>Nama Kelas</th>
           <th>Besar Bayaran</th>
+          <th>Jumlah Siswa</th>
           <th>Action</th>
         </thead>
         <tbody>
@@ -80,9 +82,10 @@ $result = $conn->query("SELECT * FROM tbsiswa");
             <td><?=$row['Tingkat']?></td>
             <td><?=$row['Jurusan'] ?></td>
             <td><?=$row['NamaKelas'] ?></td>
-            <td><?=$row['BesarBayaran'] ?></td>
+            <td style="text-align: end;"><?= $app->numberformat($row['BesarBayaran']) ?></td>
+            <td style="text-align: end;"><?=$row['jumlahsiswa'] ?></td>
             <td>
-              <span><a href="sppsiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
+              <span><a href="setsppsiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
             </td>
           </tr>
         </li>
@@ -94,42 +97,53 @@ $result = $conn->query("SELECT * FROM tbsiswa");
     <?php } else {
     echo "<p>Data Kelas untuk tahun ajaran tersebut kosong.</p> ";
     }} } elseif ($parameter1 && $parameter2) {
-      $stmtKelas = $conn->prepare("SELECT tbkelas.*, tbspp.TahunAjaran, tbspp.Tingkat, tbspp.BesarBayaran FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE KodeKelas = ?");
+      $queryKelas= "SELECT tbkelas.NamaKelas, tbkelas.Jurusan, tbspp.TahunAjaran, tbspp.Tingkat, tbspp.BesarBayaran, 
+      COUNT(tbsppsiswa.kode_spp_siswa) AS jumlahsiswa FROM tbkelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP LEFT JOIN tbsppsiswa ON tbsppsiswa.kodekelas = tbkelas.KodeKelas
+      WHERE tbkelas.kodekelas = ? GROUP BY tbkelas.KodeKelas";
+      $stmtKelas = $conn->prepare($queryKelas);
       $stmtKelas->bind_param("s",$kelas);
       $stmtKelas->execute();
       $resultKelas = $stmtKelas->get_result();
       $dataKelas = $resultKelas->fetch_assoc();
       if ($resultKelas->num_rows != 0) {
     ?>
-    <a href="sppsiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
-    <h2>Biodata Kelas</h2>
-    <div style="overflow-x: auto;">
-      <table>
-        <tr>
-          <td>Nama Kelas</td>
-          <td>:</td>
-          <td><?= $dataKelas['NamaKelas'] ?></td>
-          <td style="width: 20px;"></td>
-          <td>Jurusan</td>
-          <td>:</td>
-          <td><?= $dataKelas['Jurusan'] ?></td>
-        </tr>
-        <tr>
-          <td>Tahun Ajaran</td>
-          <td>:</td>
-          <td><?= $dataKelas['TahunAjaran'] ?></td>
-          <td style="width: 20px;"></td>
-          <td>Tingkat</td>
-          <td>:</td>
-          <td><?= $dataKelas['Tingkat'] ?></td>
-        </tr>
-        <tr>
-          <td>Jumlah Bayaran</td>
-          <td>:</td>
-          <td><?= "Rp.".$app->numberformat($dataKelas['BesarBayaran']) ?></td>
-        </tr>
-      </table>
-    </div>
+    <a href="setsppsiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
+    <fieldset class="fieldset">
+      <legend class="legend">
+        <h2>Biodata Kelas</h2>
+      </legend>
+      <div style="overflow-x: auto;">
+        <table>
+          <tr>
+            <td>Nama Kelas</td>
+            <td>:</td>
+            <td><?= $dataKelas['NamaKelas'] ?></td>
+            <td style="width: 30px;"></td>
+            <td>Jurusan</td>
+            <td>:</td>
+            <td><?= $dataKelas['Jurusan'] ?></td>
+          </tr>
+          <tr>
+            <td>Tahun Ajaran</td>
+            <td>:</td>
+            <td><?= $dataKelas['TahunAjaran'] ?></td>
+            <td style="width: 30px;"></td>
+            <td>Tingkat</td>
+            <td>:</td>
+            <td><?= $dataKelas['Tingkat'] ?></td>
+          </tr>
+          <tr>
+            <td>Jumlah Bayaran</td>
+            <td>:</td>
+            <td><?= "Rp.".$app->numberformat($dataKelas['BesarBayaran']) ?></td>
+            <td style="width: 30px;"></td>
+            <td>Jumlah Siswa</td>
+            <td>:</td>
+            <td><?= $dataKelas['jumlahsiswa'] ?></td>
+          </tr>
+        </table>
+      </div>
+    </fieldset>
 
     <hr>
     <!-- Data Siswa di kelas... -->
@@ -182,7 +196,7 @@ $result = $conn->query("SELECT * FROM tbsiswa");
         <?php $resultSiswa=$conn->query("SELECT tbsiswa.NIS, tbsiswa.Namasiswa FROM tbsiswa WHERE nis != 1");
         if ($resultSiswa->num_rows > 0) {
           ?>
-        <form id="formModal" action="asdfghjkl" method="post">
+        <form id="formModal" action="tambahsetsppsiswa.php" method="post">
           <input type="hidden" name="kelas" value="<?=$kelas ?>">
           <table style="border: 1px solid #ccc;">
             <thead>

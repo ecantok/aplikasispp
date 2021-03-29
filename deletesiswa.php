@@ -19,10 +19,6 @@ if (!empty($_GET['nis'])) {
     $stmtUser->execute();
     $stmtUser->close();
   } elseif ($action == "Hapus Siswa") {
-    $stmt3 = $conn->prepare("DELETE FROM tbpembayaran WHERE NIS = ?");
-    $stmt3->bind_param("s",$id);
-    $stmt3->execute();
-    $stmt3->close();
   
     $stmt = $conn->prepare("DELETE FROM tbsiswa WHERE NIS = ?");
     $stmt->bind_param("s",$id);

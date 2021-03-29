@@ -16,13 +16,13 @@ if ($app->cekPemissionLevel($levelUser, "Siswa") === false) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>History || Pembayaran SPP</title>
+  <title>History Transaksi || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php require_once 'navbar.php'; ?>
 <div class="container">
-    <h2>History Pembayaran Spp</h2>
+    <h2>History Transaksi Spp</h2>
     <div>
       <?php 
         $app->pesanDialog();

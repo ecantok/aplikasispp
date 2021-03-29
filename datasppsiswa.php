@@ -13,22 +13,19 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entri Pembayaran || Pembayaran SPP</title>
+  <title>Data SPP Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php require_once 'navbar.php'; ?>
 <div class="container">
     
-    <h2>Entri Pembayaran Spp</h2>
+    <h2>Data SPP Siswa</h2>
     <div>
       <?php 
         $app->pesanDialog();
       ?>
         
-    </div>
-    <div style="display: none;">
-      <button id="tampilModal">Tambah Data Kelas</button>
     </div>
     
     <form action="" method="get">
@@ -37,9 +34,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
           <label for="nis"><b>NIS</b></label>
           <?php $nis = (!empty($_GET['nis'])&& $_GET['nis'] != '')? $_GET['nis']: ''; ?>
           <input type="text" name="nis" id="nis" value="<?=$nis?>">
-
         </div>
-
         <input style="margin: 15px 10px;" type="submit" value="Cari">
       </div>
     </form>
@@ -61,7 +56,8 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     $result = $stmtTahunAjaran->get_result();
     if ($result->num_rows > 0) {
     $result->fetch_all(MYSQLI_ASSOC);
-    ?> 
+    ?>
+    <label for="tahunajaran">Pilih Tahun Ajaran</label> 
     <select name='tahunajaran' id="tahunajaran" required>
     <option value="">-Tahun Ajaran-</option>
     <?php
@@ -79,18 +75,17 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     echo "</select></td>";
     } else {
       ?>
-        <p>Siswa tidak ditemukan</p>
+        <p>Data Spp Siswa dengan NIS <?=$nis?> tidak ditemukan</p>
       <?php
     }
   ?>
+  <hr>
   <?php } ?>
   <div id="respon"></div>
-  <p><i>Pembayaran SPP dilakukan dengan cara Mencari Tagihan Siswa dengan NIS melalui form diatas, kemudian dilakukan entri pembayaran</i></p>
 </div>
   <?php require_once "footer.php";?>
   <span class="close"></span>
 </body>
-<script src="script.js"></script>
 <script>
   const selectTh = document.getElementById("tahunajaran");
   const address = "getdataspp.php";
