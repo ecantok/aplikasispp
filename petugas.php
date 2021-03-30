@@ -19,7 +19,8 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   <?php include_once "navbar.php"; ?>
   <div class="container">
     <?php 
-    $stmt = $conn ->prepare("SELECT * FROM tbpetugas");
+    $stmt = $conn ->prepare("SELECT tbpetugas.*, tblogin.Username FROM `tbpetugas`
+    LEFT JOIN tblogin ON tblogin.kode_petugas = tbpetugas.KodePetugas");
     $stmt->execute();
     $result = $stmt->get_result();
     ?>
@@ -33,6 +34,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
     <div id="tableId" style="overflow-x:auto;">
       <table class="table-view">
         <thead>
+          <th>Kode Petugas</th>
           <th>Nama Petugas</th>
           <th>Username</th>
           <th style="width: 200px;">Alamat</th>
@@ -43,8 +45,9 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
         <tbody>
           <?php while ($row = $result ->fetch_assoc() ):?>
             <tr>
-              <td><?=$row['NamaPetugas'] ?></td>
-              <td id="nama<?=$row['KodePetugas']?>"><?=$row['Username'] ?></td>
+              <td><?=$row['KodePetugas'] ?></td>
+              <td id="nama<?=$row['KodePetugas'] ?>"><?=$row['NamaPetugas'] ?></td>
+              <td><?=$row['Username'] ?></td>
               <td><?=$row['Alamat'] ?></td>
               <td><?=$row['Telp'] ?></td>
               <td style="width: auto;"><?=$row['Jabatan'] ?></td>
@@ -70,8 +73,10 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
         <h3><span id="modal-title">Tambah Data</span> </h3>
         <form id="formModal" action="tambahpetugas.php" method="post">
           <input type="hidden" name="id" id="id">
+          <label for="kodepetugas"><b>Kode Petugas</b></label>
+          <input type="number" placeholder="Masukkan Kode Petugas" id="kodepetugas" name="kodepetugas" required>
           <label for="NamaPetugas"><b>Nama Petugas</b></label>
-          <input type="text" placeholder="Masukkan Tingkat" id="NamaPetugas" name="NamaPetugas" required>
+          <input type="text" placeholder="Masukkan Nama Petugas" id="NamaPetugas" name="NamaPetugas" required>
           <label for="Username"><b>Username</b></label>
           <input type="text" placeholder="Masukkan Username untuk Login" id="Username" name="Username" required>
           <div class="flex">

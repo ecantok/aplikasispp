@@ -87,6 +87,6 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
   
   $param = "?tahunajaran=".urlencode($dataKelas['TahunAjaran'])."&kelas=$kelas";
 }
-  header("Location: setsppsiswa.php$param");
+  header("Location: pendataansiswa.php$param");
 
 ?>

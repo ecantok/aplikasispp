@@ -16,7 +16,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Set SPP Siswa || Pembayaran SPP</title>
+  <title>Pendataan Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
   <?php $app->pesanDialog(); ?>
 </head>
@@ -24,7 +24,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
 <?php  include_once 'navbar.php' ?>
 
   <div class="container">
-    <h2>Set SPP Siswa</h2>
+    <h2>Pendataan Siswa</h2>
     
     <!-- FORM TAHUN AJARAN -->
     <div>
@@ -85,7 +85,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
             <td style="text-align: end;"><?= $app->numberformat($row['BesarBayaran']) ?></td>
             <td style="text-align: end;"><?=$row['jumlahsiswa'] ?></td>
             <td>
-              <span><a href="setsppsiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
+              <span><a href="pendataansiswa.php?tahunajaran=<?=urlencode($selectedTahunAjaran)."&kelas=".$row['KodeKelas'] ?>"> Lihat Siswa</a></span>
             </td>
           </tr>
         </li>
@@ -107,7 +107,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
       $dataKelas = $resultKelas->fetch_assoc();
       if ($resultKelas->num_rows != 0) {
     ?>
-    <a href="setsppsiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
+    <a href="pendataansiswa.php?tahunajaran=<?=$selectedTahunAjaran?>" class="link">&#171; Kembali</a>
     <fieldset class="fieldset">
       <legend class="legend">
         <h2>Biodata Kelas</h2>
@@ -148,13 +148,16 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
     <hr>
     <!-- Data Siswa di kelas... -->
     <h2>Data Siswa di Kelas <?=$dataKelas['NamaKelas'] ?></h2>
-    <div style="display: block;" class="mb">
-      <button id="tampilModal" class="button">Tambah Siswa</button>
-    </div>
+    <?php if ($app->cekPemissionLevel($levelUser)): ?>
+      <div style="display: block;" class="mb">
+        <button id="tampilModal" class="button">Tambah Siswa</button>
+      </div>
+    <?php endif; ?>
     <div id="tableId" style="overflow-x:auto;">
       <table class="table-view">
         <thead>
           <th>No.</th>
+          <th>Kode Spp</th>
           <th>NIS</th>
           <th>Nama</th>
           <th>Action</th>
@@ -168,12 +171,13 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
             
             $resultSppSiswa = $stmtSppSiswa->get_result();
             if ($resultSppSiswa->num_rows == 0) {
-              echo "<td colspan = '4' style='text-align: center;'><b>Data Kosong</b></td>";
+              echo "<td colspan = '5' style='text-align: center;'><b>Data Kosong</b></td>";
             }
-            $cekSiswa = []; $i=1; while ($dataSppSiswa = $resultSppSiswa ->fetch_assoc() ):
+            $i=1; while ($dataSppSiswa = $resultSppSiswa ->fetch_assoc() ):
           ?>
           <tr>
             <td><?=$i ?></td>
+            <td><?=$dataSppSiswa['kode_spp_siswa'] ?></td>
             <td><?=$dataSppSiswa['NIS'] ?></td>
             <td><?=$dataSppSiswa['NamaSiswa'] ?></td>
             <td>
@@ -181,19 +185,33 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
             </td>
           </tr>
         </li>
-          <?php array_push($cekSiswa, $dataSppSiswa['NIS']); $i++; endwhile; ?>
+          <?php $i++; endwhile; ?>
         </tbody>
       </table>
     </div>
 
-    <?php }} ?>
-
+    <?php }} if ($app->cekPemissionLevel($levelUser)): ?>
+    
     <!-- MODAL BOX -->
     <div class="modal" id="modalBox">
       <div class="modal-content-small">
         <span class="close">&times;</span>
         <h4><span id="modal-title">Tambah Siswa</span></h4>
-        <?php $resultSiswa=$conn->query("SELECT tbsiswa.NIS, tbsiswa.Namasiswa FROM tbsiswa WHERE nis != 1");
+        <?php $resultSiswa=$conn->query("SELECT tbsiswa.NIS, tbsiswa.Namasiswa FROM tbsiswa");
+        $queryCekSiswa = "SELECT `tbsppsiswa`.`nis`
+        FROM `tbsppsiswa`
+        JOIN `tbkelas` ON `tbkelas`.`KodeKelas` = tbsppsiswa.kodekelas
+        JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP
+        WHERE tbspp.TahunAjaran = ?";
+        $stmtCekSiswa = $conn->prepare($queryCekSiswa);
+        $stmtCekSiswa->bind_param("s",$selectedTahunAjaran);
+        $stmtCekSiswa->execute();
+        $resultCekSiswa = $stmtCekSiswa->get_result();
+        $dataCekSiswa = $resultCekSiswa->fetch_all(MYSQLI_ASSOC);
+        $cekSiswa = array();
+        foreach ($dataCekSiswa as $key ) {
+          array_push($cekSiswa, $key["nis"]);
+        }
         if ($resultSiswa->num_rows > 0) {
           ?>
         <form id="formModal" action="tambahsetsppsiswa.php" method="post">
@@ -207,7 +225,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
             <tbody>
               <?php
                 while($row=mysqli_fetch_array($resultSiswa)){
-                    if (in_array($row['NIS'],$cekSiswa)) {
+                    if (in_array($row['NIS'], $cekSiswa)) {
                       continue;
                     }
                     ?>
@@ -232,8 +250,11 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
         ?>
       </div>
     </div>
+    <?php endif; ?>
   </div>
   <?php require_once "footer.php" ?>
 </body>
+<?php if ($app->cekPemissionLevel($levelUser)): ?>
 <script src="script.js"></script>
+<?php endif; ?>
 </html>

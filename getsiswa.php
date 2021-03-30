@@ -2,7 +2,7 @@
 require_once "app.php";
 if ($selectedUrl == "getsiswa.php") {
   //Don't come here
-  header("location:index.php");
+  // header("location:index.php");
 }
 if (!empty($_GET['nis'])) {
   $nis = $_GET['nis'];

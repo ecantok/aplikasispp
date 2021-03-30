@@ -1,7 +1,7 @@
 <?php
 require_once 'app.php';
   if (!empty($_POST)) {
-    
+    $KodePetugas = $_POST['kodepetugas'];
     $NamaPetugas = $_POST['NamaPetugas'];
     $Username = $_POST['Username'];
     $Password = $_POST['Password'];
@@ -20,25 +20,37 @@ require_once 'app.php';
       if ($Password != '' && $Password2 != '') {
         if ($resultCek->num_rows == 0){
           $stmtCek->close();
-          $query = "INSERT INTO `tbpetugas`(`KodePetugas`, `Username`, `Password`, `NamaPetugas`, `Alamat`, `Telp`, `Jabatan`) VALUES (?,?,?,?,?,?,?)";
+          unset($stmtCek);
+          $query = "INSERT INTO `tbpetugas`(`KodePetugas`, `NamaPetugas`, `Alamat`, `Telp`, `Jabatan`) VALUES (?,?,?,?,?)";
           $stmt = $conn->prepare($query);
-          $stmt->bind_param("sssssss",$KodePetugas,$Username,$Password,$NamaPetugas,$Alamat,$Telp,$Jabatan);
+          $stmt->bind_param("sssss",$KodePetugas,$NamaPetugas,$Alamat,$Telp,$Jabatan);
           $stmt->execute();
-          
           if ($conn->affected_rows > 0) {
-            $level = "Petugas";
-            $query = "INSERT INTO `tblogin`(`KodeLogin`, `Username`, `Password`, `Level`) VALUES ('', ?, md5(?), ?)";
-            $stmt2 = $conn->prepare($query);
-            $stmt2->bind_param('sss', $Username, $Password, $level);
-            $stmt2->execute();
-            // die(var_dump($conn->affected_rows));
-            if ($conn->affected_rows > 0) {
-              $app->setpesan("Petugas Berhasil","ditambahkan");
+            $stmt->close();
+            $result = $conn->query("SELECT KodePetugas FROM tbpetugas WHERE KodePetugas = {$KodePetugas}");
+            if ($result->num_rows == 1) {
+              unset($stmt);
+  
+              $level = "Petugas";
+              $query = "INSERT INTO `tblogin` (`KodeLogin`, `Username`, `Password`, `Level`, `nis_siswa`, `kode_petugas`) VALUES (NULL, ?, MD5(?), ?, NULL, ?)";
+              $stmt2 = $conn->prepare($query);
+              $stmt2->bind_param('ssss', $Username, $Password, $level, $KodePetugas);
+              if ($conn->errno == 0) {
+                $stmt2->execute();
+                if ($conn->affected_rows > 0) {
+                  $app->setpesan("Petugas Berhasil","ditambahkan");
+                } else {
+                  var_dump($conn->error); die;
+                  $app->setpesan("Login Petugas Gagal", "ditambahkan");
+                }
+              } else {
+                $app->setpesan("Login Petugas Gagal", "Dibuat");
+              }
             } else {
-              $app->setpesan("Petugas Gagal", "ditambahkan");
+              echo ":/";
             }
           } else {
-            $app->setpesan("Buatlah Username yang berbeda!");
+            $app->setpesan("Petugas Gagal!", "Dibuat");
           }
         } else {
           $app->setpesan("ID Petugas tidak boleh sama!");

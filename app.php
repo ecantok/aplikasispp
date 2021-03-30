@@ -2,10 +2,11 @@
   define("BASEURL", "http://localhost/aplikasispp");
   // URL
   $url = explode('/', $_SERVER['REQUEST_URI']);
-  $selectedUrl = $url[2];
-
- //Koneksi SQL
+  $urlSplit = explode('?',$url[2]);
+  $selectedUrl = $urlSplit[0];
+  //Koneksi SQL
   $conn = new mysqli('localhost', 'root', '', 'dbspp2');
+  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
   if ($conn->connect_error) {
    die("Koneksi mysql error : ".$conn->connect_error);
   }
@@ -17,12 +18,13 @@
   $session = false;
   
   // Jika ada session username dari proses login...
-  if (!empty($_SESSION['username'])) {
+  @$idUser = $_SESSION['iduser'];
+  @$username = $_SESSION['username'];
+  @$levelUser = $_SESSION['level'];
+  @$bioname = $_SESSION['bioname'];
+  if ($idUser && $username && $levelUser && $bioname) {
     // ... ada session (session = true)
     $session = true;
-    $idUser = $_SESSION['iduser'];
-    $user = $_SESSION['username'];
-    $levelUser = $_SESSION['level'];
   } 
 
   //Buat objek yang akan digunakan

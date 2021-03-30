@@ -38,6 +38,7 @@ if (url == "kelas.php") {
   form[3] = document.getElementById("Alamat");
   form[4] = document.getElementById("Telp");
   form[5] = document.getElementById("Jabatan");
+  form[6] = document.getElementById("kodepetugas");
   
 } else if(url == "spp.php") {
 
@@ -170,10 +171,7 @@ function editPetugas(str) {
       form[3].value = obj.Alamat;
       form[4].value = obj.Telp;
       form[5].value = obj.Jabatan;
-      if (str == 1) {
-        form[2].readOnly = true;
-        form[5].readOnly = true;
-      }
+      form[6].value = obj.KodePetugas;
     }
   }
   xmlhttp.open("GET","getpetugas.php?kodepetugas="+str,true);

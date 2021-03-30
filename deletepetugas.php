@@ -7,7 +7,7 @@ if (!$session) {
 if (!empty($_GET['id'])) {
   $id = $_GET["id"];
   if ($id == 1) {
-    $app->setpesan("Admin tidak bisa","dihapus");
+    $app->setpesan("Admin tidak boleh","dihapus");
     exit;
   }
   $stmt = $conn->prepare("DELETE FROM tbpetugas WHERE KodePetugas = ?");

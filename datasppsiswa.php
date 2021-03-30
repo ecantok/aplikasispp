@@ -27,7 +27,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
       ?>
         
     </div>
-    
+  <?php if (!$app->cekPemissionLevel($levelUser,"Siswa")) { ?>
     <form action="" method="get">
       <div class="flex">
         <div>
@@ -38,8 +38,10 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
         <input style="margin: 15px 10px;" type="submit" value="Cari">
       </div>
     </form>
+    <p class="info-text"><i>NIS Dapat dicari <a href="pendataansiswa.php" class="link">di sini</a></i></p>
     <hr>
     <?php
+     } 
       if (!empty($_GET['nis'])&& $_GET['nis'] != '') {
     ?>
   <br>
@@ -51,6 +53,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     WHERE tbsppsiswa.nis = ?
     ";
     $stmtTahunAjaran=$conn->prepare($q);
+    $nis = ($app->cekPemissionLevel($levelUser,"Siswa"))? $idUser : $nis;
     $stmtTahunAjaran->bind_param("i", $nis);
     $stmtTahunAjaran->execute();
     $result = $stmtTahunAjaran->get_result();
@@ -75,7 +78,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     echo "</select></td>";
     } else {
       ?>
-        <p>Data Spp Siswa dengan NIS <?=$nis?> tidak ditemukan</p>
+        <p><i>Data Spp Siswa dengan NIS <?=$nis?> tidak ditemukan</i></p>
       <?php
     }
   ?>
@@ -95,13 +98,18 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
         document.getElementById("tabel").innerHTML = "Data belum dipilih";
         return;
       } else {
-        ajax(address, kodespp);
+        ajax(address, "?q="+kodespp);
       }
     });
   <?php if (!empty($_GET['q'])) {
     echo "
     const kodesppGet = '{$_GET['q']}';
-    ajax(address, kodesppGet);
+    ajax(address, '?q='+kodesppGet);
+    ";
+  } elseif (!empty($_GET['kodepembayaran'])) {
+    echo "
+    const kodepembayaran = '{$_GET['kodepembayaran']}';
+    ajax(address, '?kodepembayaran='+kodepembayaran);
     ";
   }?>
   function ajax(addr, param) {
@@ -117,7 +125,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
         document.getElementById("respon").innerHTML = this.responseText;
       }
     };
-    xmlhttp.open("GET",""+addr+"?q="+param,true);
+    xmlhttp.open("GET",addr+param,true);
     xmlhttp.send();
   }
 </script>

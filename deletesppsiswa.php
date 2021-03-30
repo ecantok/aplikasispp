@@ -4,6 +4,7 @@ require_once 'app.php';
 if (!$session && $app->cekPemissionLevel($levelUser)) {
   header("Location:index.php");
 }
+$param = "";
 if (!empty($_GET['id'])) {
   $id = $_GET["id"];
   //Get Informasi SPP dari kode kelas
@@ -28,7 +29,7 @@ if (!empty($_GET['id'])) {
     } else {
       $app->setpesan("Data SPP Gagal", "dihapus");
     }
-    $param = "setsppsiswa.php?tahunajaran=$tahunAjaran&kelas=$kelas";
-  header("Location:$param");
-}
+    $param = "?tahunajaran=$tahunAjaran&kelas=$kelas";
+  }
+  header("Location:pendataansiswa.php{$param}");
 ?>

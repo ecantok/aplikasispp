@@ -7,17 +7,11 @@ if (!$session) {
 if (!empty($_GET['nis'])) {
   $id = $_GET["nis"];
   $action = $_GET["action"];
-
-  $stmt2 = $conn->prepare("DELETE FROM tblogin WHERE Username = ?");
-  $stmt2->bind_param("s",$id);
-  $stmt2->execute();
-  $stmt2->close();
-
   if ($action == "Hapus User") {
-    $stmtUser = $conn->prepare("UPDATE tbsiswa SET `Username` = '' WHERE NIS = ?");
-    $stmtUser->bind_param("s",$id);
-    $stmtUser->execute();
-    $stmtUser->close();
+    $stmt2 = $conn->prepare("DELETE FROM tblogin WHERE Username = ?");
+    $stmt2->bind_param("s",$id);
+    $stmt2->execute();
+    $stmt2->close();
   } elseif ($action == "Hapus Siswa") {
   
     $stmt = $conn->prepare("DELETE FROM tbsiswa WHERE NIS = ?");

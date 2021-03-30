@@ -16,10 +16,11 @@ if ($selectedUrl == "navbar.php") {
     <a href="spp.php" class="nav-link<?=($selectedUrl == "spp.php")? " selected": "" ; ?>">Data SPP</a>
     <a href="kelas.php" class="nav-link<?=($selectedUrl == "kelas.php")? " selected": "" ; ?>">Data Kelas</a>
     <a href="siswa.php" class="nav-link<?=($selectedUrl == "siswa.php")? " selected": "" ; ?>">Data Siswa</a>
-    <a href="setsppsiswa.php" class="nav-link<?=($selectedUrl == "setsppsiswa.php")? " selected": "" ; ?>">Set SPP Siswa</a>
+    <a href="pendataansiswa.php" class="nav-link<?=($selectedUrl == "pendataansiswa.php")? " selected": "" ; ?>">Pendataan Siswa</a>
     <?php endif; if($app->cekPemissionLevel($levelUser,"Siswa") === false): ?>
     <a href="datasppsiswa.php" class="nav-link<?=($selectedUrl == "datasppsiswa.php")? " selected": "" ; ?>">Data SPP Siswa</a>
     <?php endif; ?>
+    <a href="pembayaranspp.php" class="nav-link<?=($selectedUrl == "pembayaranspp.php")? " selected": "" ; ?>">Pembayaran SPP</a>
     <a href="history.php" class="nav-link<?=($selectedUrl == "history.php")? " selected": "" ; ?>">History Pembayaran</a>
     <?php if ($app->cekPemissionLevel($levelUser)): ?>
     <a href="laporan.php" class="nav-link<?=($selectedUrl == "laporan.php")? " selected": "" ; ?>">Laporan</a>
@@ -31,7 +32,7 @@ if ($selectedUrl == "navbar.php") {
       Aplikasi Pembayaran SPP
     </li>
     <li class="navtop-item">
-      <?=$user?>
+      <?=$bioname?>
     </li>
   </ul>
 <?php ?>

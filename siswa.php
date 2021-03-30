@@ -12,7 +12,8 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
 //   $app->setpesan("Mohon Masukan Data Kelas Terlebih Dahulu");
 //   header("Location: kelas.php");
 // }
-$result = $conn->query("SELECT * FROM tbsiswa WHERE NIS != 1");
+$result = $conn->query("SELECT tbsiswa.*, tblogin.Username FROM `tbsiswa` LEFT JOIN tblogin ON tblogin.nis_siswa = tbsiswa.NIS
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +85,7 @@ $result = $conn->query("SELECT * FROM tbsiswa WHERE NIS != 1");
           <input type="text" placeholder="Masukkan Alamat" id="alamat" name="alamat">
 
           <label for="telp"><b>No Telp</b></label>
-          <input type="text" placeholder="Masukkan Telp" id="telp" name="telp">
+          <input type="text" placeholder="Masukkan Telp" id="telp" name="telp" maxlength="15">
 
           <!-- <label for="kelas"><b>Kelas</b></label>
           <select id="kelas" name="kelas">
