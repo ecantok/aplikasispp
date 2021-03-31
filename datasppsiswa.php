@@ -265,4 +265,5 @@ if (!$session) {
     xmlhttp.send();
   }
 </script>
+<script src="navbar.js"></script>
 </html>

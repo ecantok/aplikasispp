@@ -23,6 +23,9 @@ $result = $conn->query("SELECT tbsiswa.*, tblogin.Username FROM `tbsiswa` LEFT J
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="datatable/datatables.min.css">
+  <script src="datatable/jquery-3.6.0.min.js"></script>
+  <script src="datatable/datatables.min.js"></script>
 </head>
 <body>
 <?php  include_once 'navbar.php' ?>
@@ -36,7 +39,7 @@ $result = $conn->query("SELECT tbsiswa.*, tblogin.Username FROM `tbsiswa` LEFT J
       <?php $app->pesanDialog(); ?>
     </div>
     <div id="tableId" style="overflow-x:auto;">
-      <table class="table-view">
+      <table class="table-view" id="table">
         <thead>
           <th>No.</th>
           <th>NIS</th>
@@ -65,7 +68,6 @@ $result = $conn->query("SELECT tbsiswa.*, tblogin.Username FROM `tbsiswa` LEFT J
           <?php $i++; endwhile; ?>
         </tbody>
       </table>
-      <div id="respon"></div>
     </div>
 
     <!-- MODAL BOX -->
@@ -114,4 +116,14 @@ $result = $conn->query("SELECT tbsiswa.*, tblogin.Username FROM `tbsiswa` LEFT J
   <?php require_once "footer.php";?>
 </body>
 <script src="script.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#table").DataTable({
+      // "ordering": false,
+      // "info":     false
+      "lengthChange": false,
+      "pageLength" : 30
+    });
+  });
+</script>
 </html>

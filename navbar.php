@@ -6,6 +6,10 @@ if ($selectedUrl == "navbar.php") {
 }
 ?>
   <nav class="navbar">
+    <div class="menu-toggle-close">
+      <input type="checkbox">
+      <span style="margin-bottom: 3px;"></span><span></span>
+    </div>
 
     <a href="index.php" class="nav-link<?=($selectedUrl == "index.php")? " selected": "" ; ?>">Home</a>
     <?php if ($app->cekPemissionLevel($levelUser)): ?>
@@ -39,6 +43,12 @@ if ($selectedUrl == "navbar.php") {
     <a href="logout.php" class="nav-link">Logout</a>
   </nav>
   <ul class="navtop">
+    <li class="navtop-item">
+      <div class="menu-toggle">
+        <input type="checkbox">
+        <span></span><span></span><span></span>
+      </div>
+    </li>
     <li class="navtop-item">
       Aplikasi Pembayaran SPP
     </li>

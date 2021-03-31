@@ -50,5 +50,6 @@
     } */?>
   </div>
   <?php require_once "footer.php";?>
+  <script src="navbar.js"></script>
 </body>
 </html>

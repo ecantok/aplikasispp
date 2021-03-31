@@ -61,7 +61,7 @@ body{
   background-color: #3d3d3d;
   color: lightgrey;
   padding: 5px;
-  z-index: 69;
+  z-index: 3;
 }
 .navbar{
  width : 170px;
@@ -73,6 +73,7 @@ body{
  display: flex;
  flex-direction: column;
  align-items: center;
+ z-index: 4;
 }
 .selected{
   color: white !important;
@@ -312,12 +313,16 @@ input:read-only {
 .navtop-item:last-child{
   margin: 0px 15px 0px auto;
 }
+.navtop-item:first-child{
+  margin-left: 0px;
+  margin-right: 20px;
+}
 
 /* MODAL BOX */
 .modal{
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 69;
   padding-top: 80px;
   left: 0;
   top: 0;
@@ -399,4 +404,87 @@ input:read-only {
 }
 .flex > div{
   margin: 0px 10px;
+}
+
+/* Hamburger */
+.menu-toggle{
+  display: flex;
+  flex-direction: column;
+  height: 20px;
+  justify-content: space-between;
+  position: relative;
+}
+.menu-toggle input{
+  position: absolute;
+  width: 45px;
+  height: 28px;
+  left: -15px;
+  top: -4px;
+  opacity: 0;
+  cursor: pointer;
+}
+.menu-toggle span{
+  display: block;
+  width: 28px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+}
+
+/* Close */
+.menu-toggle-close{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 110px;
+  display: flex;
+  flex-direction: column;
+  height: 20px;
+  justify-content: space-between;
+  position: relative;
+}
+.menu-toggle-close input{
+  position: absolute;
+  width: 45px;
+  height: 28px;
+  left: -15px;
+  top: -4px;
+  opacity: 0;
+  cursor: pointer;
+}
+.menu-toggle-close span{
+  display: block;
+  width: 28px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+}
+.menu-toggle-close span:nth-child(2){
+  transform-origin: 0 0;
+  transform: rotate(45deg) translate(-1.5px, -1.5px);
+}
+.menu-toggle-close span:nth-child(3){
+  transform-origin: 0 0;
+  transform: rotate(-45deg) translate(-1px, -1px);
+}
+
+/* Ukuran Windows */
+@media screen and (min-width: 579px) {
+  .menu-toggle-close{
+    display: none;
+  }
+  .navbar{
+    display: flex;
+  }
+  .navtop, .container, .footer{
+    margin-left: 170px;
+  }
+}
+/* Ukuran Android */
+@media screen and (max-width: 578px) {
+  .navbar{
+    display: none;
+  }
+  .footer, .container, .navtop{
+    margin-left: 0px !important;
+  }
 }

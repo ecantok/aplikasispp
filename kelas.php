@@ -89,4 +89,5 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
   <?php require_once 'footer.php' ?>
 </body>
 <script src="script.js"></script>
+<script src="navbar.js"></script>
 </html>

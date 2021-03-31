@@ -257,4 +257,5 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
 <?php if ($app->cekPemissionLevel($levelUser)): ?>
 <script src="script.js"></script>
 <?php endif; ?>
+<script src="navbar.js"></script>
 </html>

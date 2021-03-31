@@ -273,4 +273,5 @@ if ($kondisi1) {
     
   }
 </script>
+<script src="navbar.js"></script>
 </html>
