@@ -23,9 +23,9 @@
       <li class="li"><a class="link" href="cetaklaporan.php?cetak=spp" target="_blank">Laporan SPP</a></li>
       <li class="li"><a class="link" href="cetaklaporan.php?cetak=petugas" target="_blank">Laporan Petugas</a></li>
       <li class="li"><a class="link" href="cetaklaporan.php?cetak=kelas" target="_blank">Laporan Kelas</a></li>
-      <li class="li"><a class="link" href="laporan.php?cetak=siswa">Laporan Entri Pembayaran</a></li>
+      <!-- <li class="li"><a class="link" href="laporan.php?cetak=siswa">Laporan Entri Pembayaran</a></li> -->
     </ul>
-    <?php if (!empty($_GET['cetak'])&&$_GET['cetak']=='siswa') {
+    <?php /* if (!empty($_GET['cetak'])&&$_GET['cetak']=='siswa') {
       $result = $conn->query("SELECT tbs.NIS , tbk.*, tbspp.TahunAjaran FROM tbsiswa tbs LEFT JOIN tbkelas tbk ON tbs.Kodekelas = tbk.KodeKelas JOIN tbspp ON tbk.KodeSPP = tbspp.KodeSPP ORDER BY tbk.NamaKelas ASC");
       ?>
       <hr>
@@ -47,7 +47,7 @@
       </div>
     </form>
       <?php
-    }?>
+    } */?>
   </div>
   <?php require_once "footer.php";?>
 </body>

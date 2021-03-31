@@ -17,7 +17,7 @@
     $stmt ->execute();
     $cek = $stmt->get_result();
     //Cek kesamaan login
-    if ($cek->num_rows > 0) {
+    if ($cek->num_rows == 1) {
        $stmt->close();
 
       //Cek kesamaan apakah ada kesamaan
@@ -33,12 +33,11 @@
         
         //Update data
         $stmt3 = $conn->prepare("UPDATE tbsiswa SET 
-        Username = ?,
         NamaSiswa = ?,
         Alamat = ?,
         NoTelp = ?
         WHERE NIS= ?");
-        $stmt3 ->bind_param('sssss',$nis,$namalengkap,$alamat,$telp,$nis);
+        $stmt3 ->bind_param('ssss',$namalengkap,$alamat,$telp,$nis);
         $stmt3->execute();
         $stmt3->get_result();
         if ($conn->affected_rows> 0) {
@@ -46,25 +45,29 @@
 
          //Insert data
           $level="Siswa";
-          $stmt4 = $conn->prepare("INSERT INTO tblogin VALUES('', ?, MD5(?), ?)"); 
-          $stmt4 ->bind_param("sss",$nis,$password,$level);
+          $stmt4 = $conn->prepare("INSERT INTO tblogin(`Username`, `Password`, `Level`, `nis_siswa`, `kode_petugas`) VALUES( ?, MD5(?), ?, ?,NULL)"); 
+          $stmt4 ->bind_param("ssss",$nis,$password,$level,$nis);
           $stmt4 ->execute();
           $stmt4 ->get_result();
           if ($conn->affected_rows >0) {
             
             //Kirimkan Username dan Password
-            $app->setpesan("Berhasil Terdaftar! Masukkan data berikut untuk login!<p style='text-align :center;'> Username: <b>".$nis."</b> Password: <b>".$password."</b></p>","","black");
+            $app->setpesan("<div style='text-align :center;'>Berhasil Terdaftar! Masukkan data berikut untuk login! <div>Username: <b>".$nis."</b> Password: <b>".$password."</b></div></div>","","black");
             header("Location:login.php");
+            exit;
+          } else {
+            $app->setpesan("Siswa gagal diupdate","","red");
           }
+        } else {
+         $app->setpesan("User sudah teraftar!","red");
         }
       } else {
-        $app->setpesan("Maaf Username sudah diambil, Kontak admin untuk gantikan NIS","red");
-        header("Location:register.php");
+        $app->setpesan("User sudah teraftar!","red");
       }
     } else {
       $app->setpesan("Pastikan NIS terdaftar!","red");
-      header("Location:register.php");
     }
   }
+  header("Location:register.php");
 
 ?>

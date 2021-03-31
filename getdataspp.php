@@ -4,6 +4,9 @@ if ($selectedUrl == "getdataspp.php") {
   //Don't come here
   // header("location:index.php");
 }
+if ($session === false) {
+  header("location:index.php");
+}
 if ($_REQUEST["q"]) {
     $q = $_GET['q'];
       $stmtSiswa = $conn->prepare("SELECT tbsiswa.NIS, tbsiswa.NamaSiswa, tbsppsiswa.kode_spp_siswa,  tbkelas.NamaKelas, tbspp.TahunAjaran, tbspp.BesarBayaran FROM tbsiswa 
@@ -59,7 +62,9 @@ if ($_REQUEST["q"]) {
           <th>Bulan Dibayar</th>
           <th>Tahun Dibayar</th>
           <th>Status</th>
+          <?php if (!$app->cekPemissionLevel($levelUser,"Siswa")): ?>
           <th>Action</th>
+          <?php endif ?>
         </thead>
         <tbody>
           
@@ -92,11 +97,13 @@ if ($_REQUEST["q"]) {
               <td><?=$dataSPP['BulanDibayar']?></td>
               <td><?=$dataSPP['TahunDibayar']?></td>
               <td style="text-align: center;"><?=$statuspembayaran?></td>
-              <td style="text-align: center;"><?= ($statuspembayaran =='-' && $app->cekPemissionLevel($levelUser))? 
+              <?php if (!$app->cekPemissionLevel($levelUser,"Siswa")) :?>
+              <td style="text-align: center;"><?= ($statuspembayaran =='-' && !$app->cekPemissionLevel($levelUser,"Siswa"))? 
               //Bayar
               "<a href='pembayaranspp.php?kodepembayaran={$dataSPP['KodePembayaran']}'>Bayar</a>" :
               //Lihat
               "<a style='color:red' href='datasppsiswa.php?kodepembayaran={$dataSPP['KodePembayaran']}'>Lihat</a>" ;?></td>
+              <?php endif ?>
               
             </tr>
             <?php

@@ -1,7 +1,7 @@
 <?php
 require_once 'app.php';
 //Cek hak akses, Defaultnya sudah ada admin
-if (!$session||$app->cekPemissionLevel($levelUser)===false) {
+if (!$session||$app->cekPemissionLevel($levelUser, "Siswa")) {
   header("Location:index.php");
   exit;
 }

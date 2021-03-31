@@ -26,7 +26,7 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
   //Set Values
   $values = "";
   for ($i=0; $i < 6; $i++) { 
-    $values .= "(?, ?, ?, '-'), ";
+    $values .= "(?, ?, ?), ";
   }
   $values .= rtrim($values, ", ");
 
@@ -52,7 +52,7 @@ if (!empty($_POST)&&isset($_POST['nis']) &&isset($_POST['kelas']) && is_array($_
     $bulan = $app->getBulan();
     
     //MASUKKAN DATA SPP SISWA
-    $queryCreateSpp = "INSERT INTO `tbpembayaran`(`kode_spp_siswa`, `BulanDibayar`, `TahunDibayar`, `StatusPembayaran`) VALUES $values";
+    $queryCreateSpp = "INSERT INTO `tbpembayaran`(`kode_spp_siswa`, `BulanDibayar`, `TahunDibayar`) VALUES $values";
     $stmtCreateSpp = $conn -> prepare($queryCreateSpp);
     $stmtCreateSpp -> bind_param('ssssssssssssssssssssssssssssssssssss', 
     $kodeSppSiswa, $bulan[0], $semester[0], 

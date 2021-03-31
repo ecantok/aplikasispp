@@ -2,7 +2,7 @@
 require_once 'app.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
-if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
+if (!$session) {
   header("Location:index.php");
   exit;
 } 
@@ -28,6 +28,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
         
     </div>
   <?php if (!$app->cekPemissionLevel($levelUser,"Siswa")) { ?>
+  <?php if (empty($_GET['kodepembayaran'])) :?>
     <form action="" method="get">
       <div class="flex">
         <div>
@@ -38,11 +39,12 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
         <input style="margin: 15px 10px;" type="submit" value="Cari">
       </div>
     </form>
+  <?php endif; ?>
     <p class="info-text"><i>NIS Dapat dicari <a href="pendataansiswa.php" class="link">di sini</a></i></p>
     <hr>
     <?php
      } 
-      if (!empty($_GET['nis'])&& $_GET['nis'] != '') {
+      if (!empty($_GET['nis'])&& $_GET['nis'] != '' || ($app->cekPemissionLevel($levelUser,"Siswa"))) {
     ?>
   <br>
   <?php
@@ -63,7 +65,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     <label for="tahunajaran">Pilih Tahun Ajaran</label> 
     <select name='tahunajaran' id="tahunajaran" required>
     <option value="">-Tahun Ajaran-</option>
-    <?php
+  <?php
     foreach ($result as $data ) {
       if (isset($_GET['kodespp'])&&!empty($_GET['kodespp']) && $_GET['kodespp']==$data['kode_spp_siswa']) {
         echo "
@@ -78,18 +80,152 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     echo "</select></td>";
     } else {
       ?>
-        <p><i>Data Spp Siswa dengan NIS <?=$nis?> tidak ditemukan</i></p>
+        <p>Data SPP tidak ada</p>
       <?php
     }
   ?>
-  <hr>
-  <?php } ?>
+    <hr>
+  <?php } elseif (!empty($_GET['kodepembayaran'])) {
+    $kodepembayaran = $_GET['kodepembayaran'];
+    $stmtSiswa = $conn->prepare("SELECT tbsiswa.NIS, tbsiswa.NamaSiswa, tbsppsiswa.kode_spp_siswa,  tbkelas.NamaKelas, tbspp.TahunAjaran, tbspp.BesarBayaran, tbpembayaran.BulanDibayar,
+      (tbspp.BesarBayaran - SUM(tbtransaksi.jumlah_bayaran)) AS sisa
+      FROM tbpembayaran 
+      LEFT JOIN tbtransaksi ON tbtransaksi.kodepembayaran = tbpembayaran.KodePembayaran
+      JOIN tbsppsiswa ON tbsppsiswa.kode_spp_siswa = tbpembayaran.kode_spp_siswa
+      JOIN tbsiswa ON tbsiswa.NIS = tbsppsiswa.nis
+      JOIN tbkelas ON tbsppsiswa.Kodekelas = tbkelas.KodeKelas 
+      JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP 
+      WHERE tbpembayaran.KodePembayaran = ? GROUP BY tbpembayaran.KodePembayaran
+      ");
+      $stmtSiswa->bind_param("s", $kodepembayaran);
+      $stmtSiswa->execute();
+      $resultSiswa = $stmtSiswa->get_result();
+      $dataSiswa = $resultSiswa->fetch_assoc();
+      if ($resultSiswa->num_rows > 0) {
+    ?>
+    <div style="overflow-x: auto;">
+      <fieldset class="fieldset">
+        <legend class="legend"><h3>Biodata Siswa</h3></legend>
+        <table>
+            <tr>
+              <td>NIS</td>
+              <td>:</td>
+              <td><?= $dataSiswa['NIS'] ?></td>
+            </tr>
+            <tr>
+              <td>Nama Siswa</td>
+              <td>:</td>
+              <td><?= $dataSiswa['NamaSiswa'] ?></td>
+            </tr>
+            <tr>
+              <td>Kelas</td>
+              <td>:</td>
+              <td><?= $dataSiswa['NamaKelas'] ?></td>
+            </tr>
+            <tr>
+              <td>Tahun Ajaran</td>
+              <td>:</td>
+              <td><?= $dataSiswa['TahunAjaran'] ?></td>
+            </tr>
+            <tr>
+              <td>Jumlah Bayaran</td>
+              <td>:</td>
+              <td><?= "Rp.".$app->numberformat($dataSiswa['BesarBayaran']) ?></td>
+            </tr>
+        </table>
+      </fieldset>
+    </div>
+    <hr>
+    <?php
+      $sisa = $dataSiswa['sisa'];
+       $statuspembayaran = "BELUM DIBAYAR";
+       if ($sisa === null) {
+       } else if ($sisa >= 1) {
+         $statuspembayaran = "BELUM LUNAS";
+       } else if ($sisa <= 0) {
+         $statuspembayaran = "LUNAS";
+       }
+    ?>
+    <a href="datasppsiswa.php?nis=<?=$dataSiswa['NIS'].'&q='.$dataSiswa['kode_spp_siswa'] ?>" class="link">&#171; Kembali</a>
+    <h3>Detail Pembayaran SPP Siswa untuk bulan <?= $dataSiswa['BulanDibayar'] ?> (<?=$statuspembayaran?>)</h3>
+    <?php if ($sisa === null || $sisa >= 1) {?>
+    <div class="mb">
+      <a href="pembayaranspp.php?kodepembayaran=<?=$kodepembayaran?>" class="button">Buat Transaksi</a>
+    </div>
+    <?php } ?>
+    <div style="overflow-x: auto;">
+      <table class="table-view">
+        <thead>
+          <th>No.</th>
+          <th>ID Transaksi</th>
+          <th>Nama Petugas</th>
+          <th>Tanggal Transaksi</th>
+          <th>Metode Transaksi</th>
+          <th>Jumlah Bayaran</th>
+          <th>Kembalian</th>
+          <th>Keterangan</th>
+          <th>Action</th>
+        </thead>
+        <tbody>
+        <?php
+          $stmtSiswa->close();
+          $stmtTransaksi = $conn->prepare("SELECT tbtransaksi.*, tbpetugas.NamaPetugas FROM `tbtransaksi`
+          LEFT JOIN tbpetugas ON tbpetugas.KodePetugas = tbtransaksi.kodepetugas
+          WHERE tbtransaksi.kodepembayaran = ?");
+          $stmtTransaksi->bind_param("s",$kodepembayaran);
+          $stmtTransaksi->execute();
+          $resultTransaksi = $stmtTransaksi->get_result();
+          $fetchTransaksi = $resultTransaksi->fetch_all(MYSQLI_ASSOC);
+          $no = 1;
+          if ($resultTransaksi->num_rows >= 1) {
+          foreach ($fetchTransaksi as $dataTransaksi ) {
+        ?>
+          <tr>
+            <td><?=$no?></td>
+            <td><?=$dataTransaksi['idtransaksi']?></td>
+            <td><?=$dataTransaksi['NamaPetugas']?></td>
+            <td><?=$dataTransaksi['tgl_transaksi']?></td>
+            <td><?=$dataTransaksi['metode_transaksi']?></td>
+            <td><?=$dataTransaksi['jumlah_bayaran']?></td>
+            <td><?=$dataTransaksi['kembalian']?></td>
+            <td><?=$dataTransaksi['keterangan']?></td>
+            <td>
+              <span><a class="btn-small blue" href='pembayaranspp.php?edit=true&idtransaksi=<?=$dataTransaksi['idtransaksi'] ?>'">Edit</a></span>
+              <?php if ($idUser == $dataTransaksi['kodepetugas'] || $app->cekPemissionLevel($levelUser)) { ?>
+                <span><a class="btn-small red" onclick="deletepembayaran('<?= $dataTransaksi['idtransaksi'] ?>')">Delete</a></span>
+              <?php } ?>
+            </td>
+          </tr>
+          <?php $no++; } } else { ?>
+            <td colspan="8"> Data Kosong</td>
+          <?php }
+          $stmtTransaksi->close();
+          ?>
+        </tbody>
+      </table>
+    </div>
+    <hr>
+    
+  <?php }}  ?>
   <div id="respon"></div>
 </div>
   <?php require_once "footer.php";?>
   <span class="close"></span>
 </body>
 <script>
+  function editpembayaran(idtransaksi) {
+    if (idtransaksi=="") {
+      document.getElementById("respon").innerHTML="";
+      return;
+    }
+    return location.href = "pembayaranspp.php?idtransaksi="+idtransaksi+"&edit=true";
+  }
+  //DELETE Kelas 
+  function deletepembayaran(idtransaksi) {
+    if (confirm("Yakin ingin hapus data transaksi dengan ID Transaksi "+idtransaksi+"?")){
+    location.href="deletetransaksi.php?id="+idtransaksi;
+    }
+  }
   const selectTh = document.getElementById("tahunajaran");
   const address = "getdataspp.php";
   selectTh.addEventListener('change', (event)=> {

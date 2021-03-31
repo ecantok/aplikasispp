@@ -4,11 +4,6 @@ if (!$session) {
   header("Location:index.php");
 }
 
-//Hanya Siswa yang bisa mengakses halaman ini
-if ($app->cekPemissionLevel($levelUser, "Siswa") === false) {
-  header("Location:index.php");
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,43 +25,54 @@ if ($app->cekPemissionLevel($levelUser, "Siswa") === false) {
         
     </div>
   <br>
-  <?php
-    $q = "SELECT tbspp.TahunAjaran, tbsppsiswa.kode_spp_siswa FROM tbsiswa 
-    JOIN tbsppsiswa ON tbsiswa.NIS = tbsppsiswa.nis
-    JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
-    JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP
-    WHERE tbsppsiswa.nis = ?
-    ";
-    $stmtTahunAjaran=$conn->prepare($q);
-    $stmtTahunAjaran->bind_param("i", $idUser);
-    $stmtTahunAjaran->execute();
-    $result = $stmtTahunAjaran->get_result();
-    if ($result->num_rows > 0) {
-    $result->fetch_all(MYSQLI_ASSOC);
-    ?> 
-    <select name='tahunajaran' id="tahunajaran" required>
-    <option value="">-Tahun Ajaran-</option>
-    <?php
-    foreach ($result as $data ) {
-      if (isset($_GET['kodespp'])&&!empty($_GET['kodespp']) && $_GET['kodespp']==$data['kode_spp_siswa']) {
-        echo "
-        <option value=".$data['kode_spp_siswa']." selected>".$data['TahunAjaran']."</option>
-        ";
-      } else {
-        echo "
-        <option value=".$data['kode_spp_siswa'].">".$data['TahunAjaran']."</option>
-        ";
-      }
-    }
-    echo "</select>";
-    } else {
-      ?>
-        <p>Siswa tidak ditemukan</p>
-      <?php
-    }
-  ?>
+  <div style="overflow-x: auto;">
+      <table class="table-view">
+      <thead>
+        <th>No.</th>
+        <th>ID Transaksi</th>
+        <th>Nama Petugas</th>
+        <th>Tanggal Transaksi</th>
+        <th>Metode Transaksi</th>
+        <th>Jumlah Bayaran</th>
+        <th>Kembalian</th>
+      </thead>
+      <tbody>
+        <?php
+          $where = "";
+          if ($app->cekPemissionLevel($levelUser, "Siswa")) {
+            $q = "SELECT tbtransaksi.*, tbpetugas.NamaPetugas FROM `tbtransaksi` LEFT JOIN tbpetugas ON tbpetugas.KodePetugas = tbtransaksi.kodepetugas JOIN tbpembayaran ON tbtransaksi.kodepembayaran = tbpembayaran.KodePembayaran JOIN tbsppsiswa ON tbsppsiswa.kode_spp_siswa = tbpembayaran.kode_spp_siswa WHERE NIS = ? ORDER BY `tbtransaksi`.`tgl_transaksi` DESC";
+            $stmtHistory=$conn->prepare($q);
+            $stmtHistory->bind_param("i", $idUser);
+          } else {
+            $q = "SELECT tbtransaksi.*, tbpetugas.NamaPetugas FROM `tbtransaksi` LEFT JOIN tbpetugas ON tbpetugas.KodePetugas = tbtransaksi.kodepetugas JOIN tbpembayaran ON tbtransaksi.kodepembayaran = tbpembayaran.KodePembayaran JOIN tbsppsiswa ON tbsppsiswa.kode_spp_siswa = tbpembayaran.kode_spp_siswa ORDER BY `tbtransaksi`.`tgl_transaksi` DESC";
+            $stmtHistory=$conn->prepare($q);
+          }
+          $stmtHistory->execute();
+          $resultHitory = $stmtHistory->get_result();
+          $fetchHisory = $resultHitory->fetch_all(MYSQLI_ASSOC);
+          $no = 1;
+          if ($resultHitory->num_rows >= 1) {
+          foreach ($fetchHisory as $dataTransaksi ) {
+        ?>
+          <tr>
+            <td><?=$no?></td>
+            <td><?=$dataTransaksi['idtransaksi']?></td>
+            <td><?=$dataTransaksi['NamaPetugas']?></td>
+            <td><?=$dataTransaksi['tgl_transaksi']?></td>
+            <td><?=$dataTransaksi['metode_transaksi']?></td>
+            <td><?=$dataTransaksi['jumlah_bayaran']?></td>
+            <td><?=$dataTransaksi['kembalian']?></td>
+          </tr>
+          <?php $no++; } } else { ?>
+            <td colspan="8"> Data Kosong</td>
+          <?php }
+          $stmtHistory->close();
+        ?>
+      </tbody>
+    </table>
+  </div>
   <div id="respon"></div>
-  <p class="text-info"><i>Histroy SPP melihat data SPP dengan NIS Anda</i></p>
+  <p class="text-info"><i>Histroy melihat data transaksi yang telah dilakukan</i></p>
 </div>
   <?php require_once "footer.php";?>
 </body>

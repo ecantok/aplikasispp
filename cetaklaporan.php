@@ -11,6 +11,7 @@ require_once 'app.php';
       <th>Tingkat</th>
       <th>Besar Bayaran</th>
     </thead>";
+    $judulLaporan = "Laporan SPP";
       break;
     case 'kelas':
       $title = "Kelas";
@@ -22,10 +23,12 @@ require_once 'app.php';
       <th>Jurusan</th>
       <th>Nama Kelas</th>
     </thead>";
+      $judulLaporan = "Laporan Data Kelas";
       break;
     case 'petugas':
       $title = "Petugas";
-      $result = $conn ->query("SELECT * FROM tbpetugas");
+      $result = $conn ->query("SELECT tbpetugas.*, tblogin.Username FROM `tbpetugas`
+      LEFT JOIN tblogin ON tblogin.kode_petugas = tbpetugas.KodePetugas");
       $thead = "<thead>
       <th style='width: 20px;'>No.</th>
       <th>Nama Petugas</th>
@@ -34,6 +37,7 @@ require_once 'app.php';
       <th>Telp</th>
       <th>Jabatan</th>
     </thead>";
+    $judulLaporan = "Laporan Petugas";
       break;
       case 'pembayaran':
         $title = "Pembayaran";
@@ -47,18 +51,19 @@ require_once 'app.php';
         <th>Tahun Dibayar</th>
         <th>Status</th>
       </thead>";
+      $judulLaporan = "Laporan Data SPP";
         break;
     default:
       header("Location:laporan.php");
       break;
   }
-
+  $dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
 ?>
 <html lang="en">
 <head>
 <style>
   *{
-    font-family: sans-serif;
+    font-family: 'Times New Roman', Times, serif;
   }
   .table-detail{
     border: solid 1px grey;
@@ -77,10 +82,32 @@ require_once 'app.php';
     color: #333;
     padding: 10px;
   }
+  .header-nama{
+    text-align: center; 
+    text-transform: capitalize;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: 22pt;
+    font-weight: bold;
+  }
   </style>
 </head>
 <body>
-
+<table width="100%" style="border-collapse: collapse;">
+  <tr>
+    <td style="text-align: center;" rowspan="3" width="150px"><img width="150px" height="150px" src="<?=BASEURL?>/img/<?=$dataSekolah['gambar_logo']?>" alt="Gambar logo" srcset=""></td>
+    <td class="header-nama" colspan="2"><p style="margin-bottom: 0xp; margin-top: 0px;"><?=$dataSekolah['nama_sekolah'] ?></p></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;"><?=$dataSekolah['alamat'].', '.$dataSekolah['kelurahan'].', '.$dataSekolah['kota'] ?></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">Tel/Fax: <?=$dataSekolah['no_telp']?>, email: <?=$dataSekolah['email']?></td>
+  </tr>
+</table>
+<hr style="border:2px solid black;">
+<hr style="border:1px solid black; margin-bottom: 100px;">
+<div style="text-align: center;"> <?=$judulLaporan?></div>
 <?php
     if (!empty($_GET['nis'])&& $_GET['nis'] != '') {
       $stmtSiswa = $conn->prepare("SELECT tbsiswa.*, tbkelas.*, tbspp.* FROM tbsiswa JOIN tbkelas ON tbsiswa.Kodekelas = tbkelas.KodeKelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE NIS = ?");
@@ -196,7 +223,7 @@ require_once 'app.php';
 
 <script>
 //Untuk membuat halaman print
-window.print();
+// window.print();
 </script>
   
 </body>
