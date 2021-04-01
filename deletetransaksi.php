@@ -4,7 +4,7 @@ require_once 'app.php';
 if (!$session && $app->cekPemissionLevel($levelUser)) {
   header("Location:index.php");
 }
-if (!empty($_GET['id'])) {
+if (!empty($_GET['id'] && !empty($_GET['kodepembayaran']))) {
   $id = $_GET["id"];
   $stmt = $conn->prepare("DELETE FROM tbtransaksi WHERE idtransaksi = ?");
   $stmt->bind_param("s",$id);
@@ -15,6 +15,6 @@ if (!empty($_GET['id'])) {
     } else {
       $app->setpesan("Data Transaksi Gagal", "dihapus");
     }
-  header("Location:spp.php");
+  header("Location:datasppsiswa.php?kodepembayaran={$_GET['kodepembayaran']}");
 }
 ?>

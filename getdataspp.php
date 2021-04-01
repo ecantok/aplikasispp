@@ -1,9 +1,5 @@
 <?php
 require_once "app.php";
-if ($selectedUrl == "getdataspp.php") {
-  //Don't come here
-  // header("location:index.php");
-}
 if ($session === false) {
   header("location:index.php");
 }
@@ -62,9 +58,7 @@ if ($_REQUEST["q"]) {
           <th>Bulan Dibayar</th>
           <th>Tahun Dibayar</th>
           <th>Status</th>
-          <?php if (!$app->cekPemissionLevel($levelUser,"Siswa")): ?>
           <th>Action</th>
-          <?php endif ?>
         </thead>
         <tbody>
           
@@ -75,7 +69,7 @@ if ($_REQUEST["q"]) {
           JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
           JOIN tbspp ON tbspp.KodeSPP = tbkelas.KodeSPP
           WHERE tbsppsiswa.kode_spp_siswa = ? 
-          GROUP BY tbpembayaran.KodePembayaran ORDER BY `tbpembayaran`.`TahunDibayar` ASC");
+          GROUP BY tbpembayaran.KodePembayaran ORDER BY `tbpembayaran`.`BulanDibayar` ASC");
           $stmtSpp->bind_param("s",$q);
           $stmtSpp->execute();
           $resultSPP = $stmtSpp->get_result();
@@ -97,13 +91,11 @@ if ($_REQUEST["q"]) {
               <td><?=$dataSPP['BulanDibayar']?></td>
               <td><?=$dataSPP['TahunDibayar']?></td>
               <td style="text-align: center;"><?=$statuspembayaran?></td>
-              <?php if (!$app->cekPemissionLevel($levelUser,"Siswa")) :?>
               <td style="text-align: center;"><?= ($statuspembayaran =='-' && !$app->cekPemissionLevel($levelUser,"Siswa"))? 
               //Bayar
               "<a href='pembayaranspp.php?kodepembayaran={$dataSPP['KodePembayaran']}'>Bayar</a>" :
               //Lihat
               "<a style='color:red' href='datasppsiswa.php?kodepembayaran={$dataSPP['KodePembayaran']}'>Lihat</a>" ;?></td>
-              <?php endif ?>
               
             </tr>
             <?php

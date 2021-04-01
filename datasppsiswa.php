@@ -15,6 +15,17 @@ if (!$session) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data SPP Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="datatable/datatables.min.css">
+  <script src="datatable/jquery-3.6.0.min.js"></script>
+  <script src="datatable/datatables.min.js"></script>
+  <script>
+  $(document).ready(function () {
+    $("#table").DataTable({
+      "lengthChange": false,
+      "pageLength" : 30
+    });
+  });
+  </script>
 </head>
 <body>
 <?php require_once 'navbar.php'; ?>
@@ -154,7 +165,7 @@ if (!$session) {
     </div>
     <?php } ?>
     <div style="overflow-x: auto;">
-      <table class="table-view">
+      <table class="table-view" id="table">
         <thead>
           <th>No.</th>
           <th>ID Transaksi</th>
@@ -190,9 +201,9 @@ if (!$session) {
             <td><?=$dataTransaksi['kembalian']?></td>
             <td><?=$dataTransaksi['keterangan']?></td>
             <td>
-              <span><a class="btn-small blue" href='pembayaranspp.php?edit=true&idtransaksi=<?=$dataTransaksi['idtransaksi'] ?>'">Edit</a></span>
               <?php if ($idUser == $dataTransaksi['kodepetugas'] || $app->cekPemissionLevel($levelUser)) { ?>
-                <span><a class="btn-small red" onclick="deletepembayaran('<?= $dataTransaksi['idtransaksi'] ?>')">Delete</a></span>
+              <span><a class="btn-small blue" href='pembayaranspp.php?edit=true&idtransaksi=<?=$dataTransaksi['idtransaksi'] ?>'">Edit</a></span>
+                <span><a class="btn-small red" onclick="deletepembayaran('<?= $dataTransaksi['idtransaksi'] ?>','<?=$kodepembayaran ?>')">Delete</a></span>
               <?php } ?>
             </td>
           </tr>
@@ -221,9 +232,9 @@ if (!$session) {
     return location.href = "pembayaranspp.php?idtransaksi="+idtransaksi+"&edit=true";
   }
   //DELETE Kelas 
-  function deletepembayaran(idtransaksi) {
+  function deletepembayaran(idtransaksi, kodepembayaran) {
     if (confirm("Yakin ingin hapus data transaksi dengan ID Transaksi "+idtransaksi+"?")){
-    location.href="deletetransaksi.php?id="+idtransaksi;
+    location.href="deletetransaksi.php?id="+idtransaksi+"&kodepembayaran="+kodepembayaran;
     }
   }
   const selectTh = document.getElementById("tahunajaran");
@@ -241,11 +252,6 @@ if (!$session) {
     echo "
     const kodesppGet = '{$_GET['q']}';
     ajax(address, '?q='+kodesppGet);
-    ";
-  } elseif (!empty($_GET['kodepembayaran'])) {
-    echo "
-    const kodepembayaran = '{$_GET['kodepembayaran']}';
-    ajax(address, '?kodepembayaran='+kodepembayaran);
     ";
   }?>
   function ajax(addr, param) {

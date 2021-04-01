@@ -11,12 +11,11 @@
     $password = $app->generateRandomString();
     
 
-    //Cek apakah nis sudah ada di table siswa
     $stmt = $conn->prepare("SELECT NIS from tbsiswa WHERE NIS = ? AND NamaSiswa = ?");
     $stmt ->bind_param('ss',$nis, $namalengkap);
     $stmt ->execute();
     $cek = $stmt->get_result();
-    //Cek kesamaan login
+    //Cek apakah nis sudah ada di table siswa
     if ($cek->num_rows == 1) {
        $stmt->close();
 
@@ -65,7 +64,7 @@
         $app->setpesan("User sudah teraftar!","red");
       }
     } else {
-      $app->setpesan("Pastikan NIS terdaftar!","red");
+      $app->setpesan("Pastikan NIS dan Nama Siswa terdaftar!","red");
     }
   }
   header("Location:register.php");

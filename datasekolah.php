@@ -169,7 +169,7 @@
 
           </div>
           <div class="middle">
-            <label for="gambar" class="form-button">Edit Gambar </label>
+            <label for="gambar" class="form-button">Ganti Logo </label>
             <input type="file" style="display: none;" name="gambar" id="gambar" class="input-file"> </input>
           </div>
           <br>

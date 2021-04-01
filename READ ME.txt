@@ -1,4 +1,4 @@
-DB NAME 		= dbspprpl3;
+DB NAME 		= dbspp2;
 
 Halaman = localhost/aplikasispp
 
@@ -18,7 +18,7 @@ LOGIN :
 *1234
 
 -- Sebaga Siswa
-**1111  (Siswa)
+**1111  (Radika Marpaung)
 *VX2UEC
 
 
@@ -26,5 +26,5 @@ LOGIN :
 *ZRQ5CW
 
 HOSTING
-epiz_28274881
+resantodavid@gmail.com
 penembakjitu42

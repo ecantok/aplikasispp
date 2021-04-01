@@ -150,7 +150,7 @@ function deleteSiswa(nis) {
   // }
   document.getElementById("deleteNis").value = nis;
   modalConfirmDelete.style.display = "block";
-  document.getElementById("textConfirmDelete").innerHTML = "Yakin ingin hapus data "+nis+"?";
+  document.getElementById("textConfirmDelete").innerHTML = "Yakin ingin hapus data NIS "+nis+"?";
 }
 
 //AJAX EDIT PETUGAS

@@ -19,6 +19,17 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
   <title>Pendataan Siswa || Pembayaran SPP</title>
   <link rel="stylesheet" href="style.css">
   <?php $app->pesanDialog(); ?>
+  <link rel="stylesheet" href="datatable/datatables.min.css">
+  <script src="datatable/jquery-3.6.0.min.js"></script>
+  <script src="datatable/datatables.min.js"></script>
+  <script>
+  $(document).ready(function () {
+    $("#table").DataTable({
+      "lengthChange": false,
+      "pageLength" : 30
+    });
+  });
+  </script>
 </head>
 <body>
 <?php  include_once 'navbar.php' ?>
@@ -65,7 +76,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
     ?>
     <h2>Data Kelas</h2>
     <div id="tableId" style="overflow-x:auto;">
-      <table class="table-view">
+      <table class="table-view" id="table">
         <thead>
           <th>No.</th>
           <th>Tingkat</th>
@@ -154,7 +165,7 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
       </div>
     <?php endif; ?>
     <div id="tableId" style="overflow-x:auto;">
-      <table class="table-view">
+      <table class="table-view" id="table">
         <thead>
           <th>No.</th>
           <th>Kode Spp</th>
@@ -170,9 +181,9 @@ $kelas = ($parameter2)? $_GET['kelas']:'' ;
             $stmtSppSiswa->execute();
             
             $resultSppSiswa = $stmtSppSiswa->get_result();
-            if ($resultSppSiswa->num_rows == 0) {
-              echo "<td colspan = '5' style='text-align: center;'><b>Data Kosong</b></td>";
-            }
+            // if ($resultSppSiswa->num_rows == 0) {
+            //   echo "<td colspan = '5' style='text-align: center;'><b>Data Kosong</b></td>";
+            // }
             $i=1; while ($dataSppSiswa = $resultSppSiswa ->fetch_assoc() ):
           ?>
           <tr>

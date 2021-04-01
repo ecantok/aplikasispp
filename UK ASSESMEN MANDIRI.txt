@@ -1,5 +1,5 @@
 1. J.620100.004.01 Menggunakan struktur data
-- Apakah anda dapat mengidentifikasi konsep data dan struktur data ?
+- Apakah anda dapat mengidentifikasi konsep data dan struktur data ?t
 - Apakah anda dapat menerapkan struktur data dan akses terhadap struktur data tersebut ?
 
 2. J.620100.009.02 Menggunakan spesifikasi program
@@ -38,3 +38,29 @@
 - Apakah anda dapat mengevaluasi hasil uji coba ?
 
 
+Siapkan diri dengan baik
+
+Nama Sesi: David Resanto
+Tempat / tgl Lahir: Denpasar / 22 April 2021
+Jenis Kelamin : Laki-laki
+Kode pos : di alamat rumah
+Kebangsaan Indonesia
+Nama Lembaga : SMK TI Bali Global Denpasar
+Jabatan : Siswa
+Alamat : Jl. Tukad Citarum
+
+Sertifikasi dicentang sertifikasi diulang jangan dicentang
+
+Memenuhi syarat denga Ijazah smk anda
+Telpon rumah bisa dikosongkan
+Pendidikan terakhir : SMK
+
+Form permohonan tanggal jangan sama dengan waktu presentasi (9/4/2021)
+Assessor SMK TI Bali global
+
+
+Centang di kolom (K) semua
+Nama Peserta : David Resanto
+Tanggal/Wkatu : 1 April 2021
+TUK : SMK TI BALI GLOBAL Denpasar
+Nama Asesor : dikosongkan

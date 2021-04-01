@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
 if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
@@ -70,9 +70,14 @@ if ($kondisi1) {
     $stmtSiswa->execute();
     $resultSiswa = $stmtSiswa->get_result();
     $dataSiswa = $resultSiswa->fetch_assoc();
+    if (doubleval($dataSiswa['sisa_tunggakan']) <= -1 ) {
+      // $dataSiswa['kodepembayaran'];
+      $app->setpesan("SPP Sudah lunas tidak perlu dilakukan pembayaran lagi");
+      echo "<script> location.href = 'datasppsiswa.php?kodepembayaran={$kodepembayaran}' </script>";
+    }
     if ($dataSiswa['NIS']!==null) {
       $tunggakan = ($dataSiswa['sisa_tunggakan'] === null)? $dataSiswa['BesarBayaran'] : $dataSiswa['sisa_tunggakan'];
-    ?>
+      ?>
     <div style="overflow-x: auto;">
       <fieldset class="fieldset">
         <legend class="legend"><h3>Biodata Siswa</h3></legend>

@@ -1,9 +1,5 @@
 <?php
 require_once "app.php";
-if ($selectedUrl == "getpetugas.php") {
-  //Don't come here
-  // header("location:index.php");
-}
 if (!empty($_GET['kodepetugas'])) {
   $KodePetugas = $_GET['kodepetugas'];
   $stmt = $conn->prepare("SELECT tbpetugas.*, tblogin.Username FROM `tbpetugas`
