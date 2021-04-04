@@ -62,7 +62,7 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
               <td><?=$row['NamaKelas'] ?></td>
               <td>
                 <span><button class="blue" onclick="editKelas('<?=$row['KodeKelas'] ?>')">Edit</button></span>
-                <span><button class="red" onclick="deleteKelas('<?= $row['KodeKelas'] ?>')">Delete</button></span>
+                <span><button class="red" onclick="deleteKelas('<?= $row['KodeKelas'] ?>','<?=$row['NamaKelas'] ?>')">Delete</button></span>
               </td>
             </tr>
           </span>
@@ -92,7 +92,9 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
           <input type="text" placeholder="Masukkan Jurusan" id="Jurusan" name="Jurusan">
           <label for="NamaKelas"><b>Nama Kelas</b></label>
           <input type="text" placeholder="Masukkan Nama Kelas" name="NamaKelas" id="NamaKelas" required>
-          <button id="tombolAksi" type="submit">Simpan</button>
+          <div class="middle">
+            <button class="form-button" id="tombolAksi" type="submit">Simpan</button>
+          </div>
         </form>
       </div>
     </div>

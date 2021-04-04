@@ -116,8 +116,8 @@ function editKelas(str) {
   xmlhttp.send();
 }
 //DELETE Kelas 
-function deleteKelas(kodekelas) {
-  if (confirm("Yakin ingin hapus data kelas "+kodekelas+"?")){
+function deleteKelas(namakelas, kodekelas) {
+  if (confirm("Yakin ingin hapus data kelas "+namakelas+"?")){
   location.href="deletekelas.php?id="+kodekelas;
   }
 }

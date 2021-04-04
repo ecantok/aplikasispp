@@ -109,7 +109,9 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
           <input type="text" placeholder="Masukkan Nomor Telp" name="Telp" id="Telp">
           <label for="Jabatan"><b>Jabatan</b></label>
           <input type="text" placeholder="Masukkan Jabatan" name="Jabatan" id="Jabatan" required>
-          <button id="tombolAksi" type="submit">Simpan</button>
+          <div class="middle">
+	    <button class="form-button" id="tombolAksi" type="submit">Simpan</button>
+          </div>
         </form>
       </div>
     </div>

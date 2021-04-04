@@ -95,7 +95,9 @@ $result = $conn->query("SELECT tbsiswa.*, tblogin.Username FROM `tbsiswa` LEFT J
             <option value="<?//=$dataKelas['KodeKelas']?>"><?//=$dataKelas['TahunAjaran'] ?> | <?//= $dataKelas['NamaKelas'] ?></option>
             <?php //endwhile; ?>
           </select> -->
-          <button id="tombolAksi" type="submit">Simpan</button>
+          <div class="middle">
+            <button class="form-button" id="tombolAksi" type="submit">Simpan</button>
+          </div>
         </form>
       </div>
     </div>

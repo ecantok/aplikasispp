@@ -88,7 +88,9 @@ if (!$session||$app->cekPemissionLevel($levelUser)===false) {
           <input type="text" placeholder="Masukkan Tingkat Spp" id="Tingkat" name="Tingkat" required>
           <label for="BesarBayaran"><b>Besar Bayaran</b></label>
           <input type="number" placeholder="Masukkan Besar Bayaran" name="BesarBayaran" id="BesarBayaran" required>
-          <button id="tombolAksi" type="submit">Simpan</button>
+          <div class="middle">
+            <button class="button" id="tombolAksi" type="submit">Simpan</button>
+          </div>
         </form>
       </div>
     </div>

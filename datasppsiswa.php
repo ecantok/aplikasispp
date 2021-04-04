@@ -59,13 +59,13 @@ if (!$session) {
     ?>
   <br>
   <?php
-    $q = "SELECT tbspp.TahunAjaran, tbsppsiswa.kode_spp_siswa FROM tbsiswa 
+    $query = "SELECT tbspp.TahunAjaran, tbsppsiswa.kode_spp_siswa FROM tbsiswa 
     JOIN tbsppsiswa ON tbsiswa.NIS = tbsppsiswa.nis
     JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
     JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP
     WHERE tbsppsiswa.nis = ?
     ";
-    $stmtTahunAjaran=$conn->prepare($q);
+    $stmtTahunAjaran=$conn->prepare($query);
     $nis = ($app->cekPemissionLevel($levelUser,"Siswa"))? $idUser : $nis;
     $stmtTahunAjaran->bind_param("i", $nis);
     $stmtTahunAjaran->execute();

@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
   switch ($_GET['cetak']) {
     case 'spp':
       $title = "Spp";
@@ -41,15 +41,13 @@ require_once 'app.php';
       break;
       case 'pembayaran':
         $title = "Pembayaran";
-        $result = $conn ->query("SELECT * FROM tbspp");
         $thead = "<thead>
         <th style='width: 20px;'>No.</th>
         <th>Kode Pembayaran</th>
-        <th>Petugas</th>
-        <th>Tgl. Pembayaran</th>
         <th>Bulan Dibayar</th>
         <th>Tahun Dibayar</th>
         <th>Status</th>
+        <th>Tunggakkan</th>
       </thead>";
       $judulLaporan = "Laporan Data SPP";
         break;
@@ -109,39 +107,44 @@ require_once 'app.php';
 <hr style="border:1px solid black; margin-bottom: 100px;">
 <div style="text-align: center;"> <?=$judulLaporan?></div>
 <?php
-    if (!empty($_GET['nis'])&& $_GET['nis'] != '') {
-      $stmtSiswa = $conn->prepare("SELECT tbsiswa.*, tbkelas.*, tbspp.* FROM tbsiswa JOIN tbkelas ON tbsiswa.Kodekelas = tbkelas.KodeKelas JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP WHERE NIS = ?");
-      $stmtSiswa->bind_param("s",$_GET['nis']);
-      $stmtSiswa->execute();
-      $resultSiswa = $stmtSiswa->get_result();
-      $dataSiswa = $resultSiswa->fetch_assoc();
-      if ($resultSiswa->num_rows != 0) {
+    if (!empty($_GET['kodespp'])&& $_GET['kodespp'] != '') {
+      $stmt = $conn->prepare("SELECT tbsiswa.NIS, tbsiswa.NamaSiswa, tbsppsiswa.kode_spp_siswa,  tbkelas.NamaKelas, tbspp.TahunAjaran, tbspp.BesarBayaran FROM tbsiswa 
+      JOIN tbsppsiswa ON tbsiswa.NIS = tbsppsiswa.nis
+      JOIN tbkelas ON tbsppsiswa.Kodekelas = tbkelas.KodeKelas 
+      JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP 
+      WHERE tbsppsiswa.kode_spp_siswa = ?");
+      $stmt->bind_param("s", $_GET['kodespp']);
+      $stmt->execute();
+      $resultStudent = $stmt->get_result();
+      $stmt->close();
+      $dataStudent = $resultStudent->fetch_assoc();
+      if ($resultStudent->num_rows != 0) {
   ?>
   <table>
     <tr>
       <td style="width: 150px;">NIS</td>
       <td>:</td>
-      <td><?= $dataSiswa['NIS'] ?></td>
+      <td><?= $dataStudent['NIS'] ?></td>
     </tr>
     <tr>
       <td>Nama Siswa</td>
       <td>:</td>
-      <td><?= $dataSiswa['NamaSiswa'] ?></td>
+      <td><?= $dataStudent['NamaSiswa'] ?></td>
     </tr>
     <tr>
       <td>Kelas</td>
       <td>:</td>
-      <td><?= $dataSiswa['NamaKelas'] ?></td>
+      <td><?= $dataStudent['NamaKelas'] ?></td>
     </tr>
     <tr>
       <td>Tahun Ajaran</td>
       <td>:</td>
-      <td><?= $dataSiswa['TahunAjaran'] ?></td>
+      <td><?= $dataStudent['TahunAjaran'] ?></td>
     </tr>
     <tr>
       <td>Jumlah Bayaran</td>
       <td>:</td>
-      <td><?= "Rp.".$app->numberformat($dataSiswa['BesarBayaran']) ?></td>
+      <td><?= "Rp.".$app->numberformat($dataStudent['BesarBayaran']) ?></td>
     </tr>
   </table>
 <?php }
@@ -151,27 +154,48 @@ require_once 'app.php';
   <?= $thead ?>
   <tbody>
     
-    <?php $no = 1; if ($_GET['cetak']=='pembayaran'&&$resultSiswa->num_rows != 0) {
-        $stmtSpp = $conn->prepare("SELECT tbpembayaran.*, tbpetugas.* FROM tbpembayaran JOIN tbpetugas ON tbpembayaran.KodePetugas = tbpetugas.KodePetugas WHERE NIS = ? ORDER BY `tbpembayaran`.`TahunDibayar` ASC");
-        $stmtSpp->bind_param("s",$_GET['nis']);
-        $stmtSpp->execute();
-        $resultSPP = $stmtSpp->get_result();
-        
-        while ($dataSPP = $resultSPP->fetch_assoc()) {
-          ?>
+    <?php $no = 1; if ($_GET['cetak']=='pembayaran'&&$resultStudent->num_rows != 0) {
+      $stmtSpp = $conn->prepare("SELECT tbpembayaran.*, (tbspp.BesarBayaran - SUM(tbtransaksi.jumlah_bayaran)) AS sisa FROM tbpembayaran
+      LEFT JOIN tbtransaksi ON tbtransaksi.kodepembayaran = tbpembayaran.KodePembayaran
+      JOIN tbsppsiswa ON tbsppsiswa.kode_spp_siswa = tbpembayaran.kode_spp_siswa
+      JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
+      JOIN tbspp ON tbspp.KodeSPP = tbkelas.KodeSPP
+      WHERE tbsppsiswa.kode_spp_siswa = ? 
+      GROUP BY tbpembayaran.KodePembayaran ORDER BY `tbpembayaran`.`BulanDibayar` ASC");
+      $stmtSpp->bind_param("s",$_GET['kodespp']);
+      $stmtSpp->execute();
+      $resultSPP = $stmtSpp->get_result();
+      $total = 0;
+      while ($dataSPP = $resultSPP->fetch_assoc()) {
+        $sisa = $dataSPP['sisa'];
+        if ($sisa === null) {
+          $sisa = $dataStudent['BesarBayaran'];
+          $statuspembayaran = "-";
+        } else if ($sisa >= 1) {
+          $statuspembayaran = "BELUM LUNAS";
+        } else if ($sisa <= 0) {
+          $statuspembayaran = "LUNAS";
+          $sisa = 0;
+        }
+    ?>
           <tr>
             <td><?=$no?></td>
             <td><?=$dataSPP['KodePembayaran']?></td>
-            <td><?=$dataSPP['NamaPetugas']?></td>
-            <td><?=$dataSPP['TglPembayaran']?></td>
             <td><?=$dataSPP['BulanDibayar']?></td>
             <td><?=$dataSPP['TahunDibayar']?></td>
-            <td style="text-align: center;"><?=$dataSPP['StatusPembayaran']?></td>
+            <td style="text-align: center;"><?=$statuspembayaran?></td>
+            <td style="text-align: end;"><?=($sisa != 0)?"Rp.".$app->numberformat($sisa): "-"; ?></td>
             
           </tr>
           <?php
-          $no++;
+          $no++; $total += $sisa;
         }
+        ?>
+        <tr>
+          <td colspan="5">Total Tunggakkan</td>
+          <td style="text-align: end;">Rp.<?=$app->numberformat($total) ?></td>
+        </tr>
+        <?php
       } elseif ($_GET['cetak']=='spp'&&$result->num_rows != 0) {
         while ($data = $result->fetch_assoc()) {
           ?>
