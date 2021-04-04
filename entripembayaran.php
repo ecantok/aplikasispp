@@ -53,6 +53,4 @@ if (!empty($_GET)&&$_GET['id']!=''&&$_GET['act']!='') {
     }
   }
 } 
-      header("Location: pembayaran.php?nis={$nis}&q={$kodeSpp}");
-      
-?>
+header("Location: pembayaran.php?nis={$nis}&q={$kodeSpp}");

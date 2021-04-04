@@ -42,4 +42,3 @@ if (!empty($_POST)) {
 } else {
   header("Location:login.php") ;
 }
-?>

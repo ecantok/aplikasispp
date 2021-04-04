@@ -1,6 +1,6 @@
 <?php
 require_once 'app.php';
-  if (!empty($_POST)) {
+if (!empty($_POST)) {
     $hiddenNis = intval($_POST['hiddenNis']);
     $nis = intval($_POST['NIS']);
     $nama = $_POST['nama'];
@@ -15,18 +15,17 @@ require_once 'app.php';
     Alamat = ?,
     NoTelp = ?
     WHERE NIS= ?");
-    $stmt ->bind_param('isssi',$nis,$nama,$alamat,$telp,$hiddenNis);
-    
+    $stmt->bind_param('isssi', $nis, $nama, $alamat, $telp, $hiddenNis);
+
     if (($conn->errno && $stmt->errno) == 0) {
-      $stmt->execute();
-      if ($conn->affected_rows > 0) {
-        $app->setpesan("Siswa Berhasil","diedit");
-      } else {
-        $app->setpesan("Siswa Gagal", "diedit");
-      }
+        $stmt->execute();
+        if ($conn->affected_rows > 0) {
+            $app->setpesan("Siswa Berhasil", "diedit");
+        } else {
+            $app->setpesan("Siswa Gagal", "diedit");
+        }
     } else {
-      $app->setpesan("Terjadi kesalahan error", "");
+        $app->setpesan("Terjadi kesalahan error", "");
     }
-  }
-  header("Location: siswa.php")
-?>
+}
+header("Location: siswa.php");

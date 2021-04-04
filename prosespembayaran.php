@@ -5,7 +5,7 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
   header("Location:index.php");
   exit;
 }
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     @$idtransaksi = $_POST["idtransaksi"];
     @$kodepembayaran = intval($_POST["kodepembayaran"]);
     @$jumlah_bayaran = doubleval($_POST["bayar"]);
@@ -71,6 +71,5 @@ if (!$session||$app->cekPemissionLevel($levelUser,"Siswa")) {
     } else {
       $app->setpesan("Pastikan data sudah Terisi!");
     }
-  }
-  header("location:datasppsiswa.php{$param}")
-?>
+}
+header("location:datasppsiswa.php{$param}");

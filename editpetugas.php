@@ -1,6 +1,6 @@
 <?php
 require_once 'App.php';
-  if (!empty($_POST)) {
+if (!empty($_POST)) {
     $id = $_POST['id'];
     $kodepetugas = $_POST['kodepetugas'];
     $NamaPetugas = $_POST['NamaPetugas'];
@@ -56,7 +56,5 @@ require_once 'App.php';
     } else {
       $app->setpesan("Password Konfirmasi Salah!");
     }
-  }
-  header("Location: petugas.php")
-?>
-
+}
+header("Location: petugas.php");
