@@ -1,5 +1,8 @@
 <?php
 require_once 'App.php';
+if (!$session) {
+    header("Location:login.php");
+}
 switch ($_GET['cetak']) {
     case 'spp':
         $title = "Spp";
@@ -55,7 +58,7 @@ switch ($_GET['cetak']) {
         header("Location:laporan.php");
         break;
 }
-$dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
+$dataSekolah = $conn->query("SELECT * FROM tbdatasekolah");
 ?>
 <html lang="en">
 
@@ -120,12 +123,10 @@ $dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
       JOIN tbsppsiswa ON tbsiswa.NIS = tbsppsiswa.nis
       JOIN tbkelas ON tbsppsiswa.Kodekelas = tbkelas.KodeKelas 
       JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP 
-      WHERE tbsppsiswa.kode_spp_siswa = ?");
-        $stmt->bind_param("s", $_GET['kodespp']);
+      WHERE tbsppsiswa.kode_spp_siswa = :kode_spp_siswa");
+        $stmt->bindParam(":kode_spp_siswa", $_GET['kodespp']);
         $stmt->execute();
-        $resultStudent = $stmt->get_result();
-        $stmt->close();
-        $dataStudent = $resultStudent->fetch_assoc();
+        $dataStudent = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($resultStudent->num_rows != 0) {
     ?>
             <table>
@@ -162,20 +163,21 @@ $dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
         <?= $thead ?>
         <tbody>
 
-            <?php $no = 1;
+            <?php 
             if ($_GET['cetak'] == 'pembayaran' && $resultStudent->num_rows != 0) {
                 $stmtSpp = $conn->prepare("SELECT tbpembayaran.*, (tbspp.BesarBayaran - SUM(tbtransaksi.jumlah_bayaran)) AS sisa FROM tbpembayaran
       LEFT JOIN tbtransaksi ON tbtransaksi.kodepembayaran = tbpembayaran.KodePembayaran
       JOIN tbsppsiswa ON tbsppsiswa.kode_spp_siswa = tbpembayaran.kode_spp_siswa
       JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
       JOIN tbspp ON tbspp.KodeSPP = tbkelas.KodeSPP
-      WHERE tbsppsiswa.kode_spp_siswa = ? 
+      WHERE tbsppsiswa.kode_spp_siswa = :kodespp 
       GROUP BY tbpembayaran.KodePembayaran ORDER BY `tbpembayaran`.`BulanDibayar` ASC");
-                $stmtSpp->bind_param("s", $_GET['kodespp']);
+                $stmtSpp->bindParam(":kodespp", $_GET['kodespp']);
                 $stmtSpp->execute();
-                $resultSPP = $stmtSpp->get_result();
+                $resultSpp = $stmtSpp->fetchAll(PDO::FETCH_ASSOC);
+                $no = 1;
                 $total = 0;
-                while ($dataSPP = $resultSPP->fetch_assoc()) {
+                foreach ($resultSpp as $dataSPP) {
                     $sisa = $dataSPP['sisa'];
                     if ($sisa === null) {
                         $sisa = $dataStudent['BesarBayaran'];
@@ -207,7 +209,7 @@ $dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
                 </tr>
                 <?php
             } elseif ($_GET['cetak'] == 'spp' && $result->num_rows != 0) {
-                while ($data = $result->fetch_assoc()) {
+                foreach ($result as $data) {
                 ?>
                     <tr>
                         <td><?= $no ?></td>
@@ -220,7 +222,7 @@ $dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
                     $no++;
                 }
             } elseif ($_GET['cetak'] == 'kelas' && $result->num_rows != 0) {
-                while ($data = $result->fetch_assoc()) {
+                foreach ($result as $data) {
                 ?>
                     <tr>
                         <td><?= $no ?></td>
@@ -233,7 +235,7 @@ $dataSekolah = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
                     $no++;
                 }
             } elseif ($_GET['cetak'] == 'petugas' && $result->num_rows != 0) {
-                while ($data = $result->fetch_assoc()) {
+                foreach ($result as $data) {
                 ?>
                     <tr>
                         <td><?= $no ?></td>

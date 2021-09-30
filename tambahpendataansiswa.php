@@ -1,6 +1,6 @@
 <?php
 
-require_once 'app.php';
+require_once 'App.php';
 if (!$session) {
     header("Location:login.php");
 }
@@ -19,6 +19,7 @@ if (!empty($_POST) && isset($_POST['nis']) && isset($_POST['kelas']) && is_array
     $stmtKelas->bind_param("s", $kelas);
     $stmtKelas->execute();
     $resultKelas = $stmtKelas->get_result();
+    $stmtKelas->close();
     $dataKelas = $resultKelas->fetch_assoc();
     $semester = explode('/', $dataKelas['TahunAjaran']);
     $selectedSemester = null;
@@ -32,7 +33,9 @@ if (!empty($_POST) && isset($_POST['nis']) && isset($_POST['kelas']) && is_array
 
     //Tambah Siswa
     foreach ($nis as $id) {
-        //DAFTAR SISWA KE KELAS TERSEBUT
+        /*
+        * Mendaftarkan siswa ke dalam kelas tersebut
+        */
         $stmtInsert = $conn->prepare($queryInsert);
         $stmtInsert->bind_param('si', $id, $kelas);
         $stmtInsert->execute();
@@ -40,18 +43,21 @@ if (!empty($_POST) && isset($_POST['nis']) && isset($_POST['kelas']) && is_array
             $jumlahBerhasil += 1;
         }
         $stmtInsert->close();
-        unset($stmtInsert);
 
-        //DAPATKAN KODE SPP SISWA SETELAH DAFTAR
+        /*
+        * Dapatkan kode spp siswa setelah terdaftar
+        */
         $queryGetKodeSppSiswa = "SELECT `kode_spp_siswa` FROM `tbsppsiswa` WHERE `nis` = ? AND `kodekelas` = ?";
         $stmtGetKodeSppSiswa = $conn->prepare($queryGetKodeSppSiswa);
         $stmtGetKodeSppSiswa->bind_param('si', $id, $kelas);
         $stmtGetKodeSppSiswa->execute();
         $getKodeSppSiswa = $stmtGetKodeSppSiswa->get_result()->fetch_assoc();
         $kodeSppSiswa = $getKodeSppSiswa['kode_spp_siswa'];
-        $bulan = $app->getBulan();
+        $bulan = $app->getMonth();
 
-        //MASUKKAN DATA SPP SISWA
+        /*
+        * Masukan data pembayaran melalui kode spp yang telah didapatkan
+        */
         $queryCreateSpp = "INSERT INTO `tbpembayaran`(`kode_spp_siswa`, `BulanDibayar`, `TahunDibayar`) VALUES $values";
         $stmtCreateSpp = $conn->prepare($queryCreateSpp);
         $stmtCreateSpp->bind_param(
@@ -93,14 +99,15 @@ if (!empty($_POST) && isset($_POST['nis']) && isset($_POST['kelas']) && is_array
             $bulan[11],
             $semester[1]
         );
-
+        /*
+        * Jika ada error atau kesalahan
+        */
         if ($stmtCreateSpp->error) {
             die(var_dump($stmtCreateSpp->error) . "<br><br>");
         }
 
         $stmtCreateSpp->execute();
         $stmtCreateSpp->close();
-        unset($stmtCreateSpp);
     }
 
     if ($conn->errno) {

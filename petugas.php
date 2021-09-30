@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
 //Cek hak akses, Defaultnya sudah ada admin
 if (!$session || $app->cekPemissionLevel($levelUser) === false) {
     header("Location:index.php");
@@ -32,10 +32,8 @@ if (!$session || $app->cekPemissionLevel($levelUser) === false) {
     <?php include_once "navbar.php"; ?>
     <div class="container">
         <?php
-        $stmt = $conn->prepare("SELECT tbpetugas.*, tblogin.Username FROM `tbpetugas`
+        $stmt = $conn->query("SELECT tbpetugas.*, tblogin.Username FROM `tbpetugas`
     LEFT JOIN tblogin ON tblogin.kode_petugas = tbpetugas.KodePetugas");
-        $stmt->execute();
-        $result = $stmt->get_result();
         ?>
         <h2>Data Petugas</h2>
         <div>
@@ -56,7 +54,7 @@ if (!$session || $app->cekPemissionLevel($levelUser) === false) {
                     <th>Action</th>
                 </thead>
                 <tbody>
-                    <?php while ($row = $result->fetch_assoc()) : ?>
+                    <?php foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) : ?>
                         <tr>
                             <td><?= $row['KodePetugas'] ?></td>
                             <td id="nama<?= $row['KodePetugas'] ?>"><?= $row['NamaPetugas'] ?></td>
@@ -73,7 +71,7 @@ if (!$session || $app->cekPemissionLevel($levelUser) === false) {
                         </tr>
                         </span>
                         </li>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <div id="respon"></div>

@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
 if (!empty($_POST)) {
     $KodePetugas = $_POST['kodepetugas'];
     $NamaPetugas = $_POST['NamaPetugas'];
@@ -9,24 +9,26 @@ if (!empty($_POST)) {
     $Alamat = $_POST['Alamat'];
     $Telp = $_POST['Telp'];
     $Jabatan = $_POST['Jabatan'];
-    $cekPass = $app->konfirmasiPassword($Password, $Password2);
+    $cekPass = $app->confirmPassword($Password, $Password2);
 
 
-    $stmtCek = $conn->prepare("SELECT KodePetugas FROM tbpetugas WHERE KodePetugas = ?");
-    $stmtCek->bind_param('s', $KodePetugas);
+    $stmtCek = $conn->prepare("SELECT KodePetugas FROM tbpetugas WHERE KodePetugas = :id");
+    $stmtCek->bindParam(':id', $KodePetugas);
     $stmtCek->execute();
-    $resultCek = $stmtCek->get_result();
     if ($cekPass) {
         if ($Password != '' && $Password2 != '') {
-            if ($resultCek->num_rows == 0) {
-                $stmtCek->close();
+            if ($stmtCek->rowCount() == 0) {
                 unset($stmtCek);
-                $query = "INSERT INTO `tbpetugas`(`KodePetugas`, `NamaPetugas`, `Alamat`, `Telp`, `Jabatan`) VALUES (?,?,?,?,?)";
+                $query = "INSERT INTO `tbpetugas`(`KodePetugas`, `NamaPetugas`, `Alamat`, `Telp`, `Jabatan`) VALUES (:kode,:nama,:alamat,:telp,:jabatan)";
                 $stmt = $conn->prepare($query);
-                $stmt->bind_param("sssss", $KodePetugas, $NamaPetugas, $Alamat, $Telp, $Jabatan);
-                $stmt->execute();
-                if ($conn->affected_rows > 0) {
-                    $stmt->close();
+                $stmt->execute(array(
+                    ":kode" => $KodePetugas,
+                    ":nama" => $NamaPetugas,
+                    ":alamat" => $Alamat,
+                    ":telp" => $Telp,
+                    ":jabatan" => $Jabatan,
+                ));
+                if ($conn->errorCode() == 0) {
                     $result = $conn->query("SELECT KodePetugas FROM tbpetugas WHERE KodePetugas = {$KodePetugas}");
                     if ($result->num_rows == 1) {
                         unset($stmt);

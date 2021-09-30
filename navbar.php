@@ -53,7 +53,7 @@ if ($selectedUrl == "navbar.php") {
         Aplikasi Pembayaran SPP
     </li>
     <li class="navtop-item">
-        <?= $bioname ?>
+        <?= $bio_name ?>
     </li>
 </ul>
 <?php ?>

@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
 if (!$session) {
     header("Location:login.php");
 }

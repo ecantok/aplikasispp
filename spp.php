@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
 
 //Cek hak akses, Defaultnya sudah ada admin
 if (!$session || $app->cekPemissionLevel($levelUser) === false) {
@@ -33,9 +33,7 @@ if (!$session || $app->cekPemissionLevel($levelUser) === false) {
     <?php require_once 'navbar.php'; ?>
     <div class="container">
         <?php
-        $stmt = $conn->prepare("SELECT * FROM tbspp ORDER BY TahunAjaran ASC");
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt = $conn->query("SELECT * FROM tbspp ORDER BY TahunAjaran ASC");
         ?>
         <h2>Data Spp</h2>
         <div>
@@ -55,7 +53,7 @@ if (!$session || $app->cekPemissionLevel($levelUser) === false) {
                 </thead>
                 <tbody>
                     <?php $i = 1;
-                    while ($row = $result->fetch_assoc()) : ?>
+                    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) : ?>
                         <tr>
                             <td><?= $i ?></td>
                             <td><?= $row['TahunAjaran'] ?></td>
@@ -69,7 +67,7 @@ if (!$session || $app->cekPemissionLevel($levelUser) === false) {
                         </span>
                         </li>
                     <?php $i++;
-                    endwhile; ?>
+                    endforeach; ?>
                 </tbody>
             </table>
             <div id="respon"></div>

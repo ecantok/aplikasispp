@@ -1,5 +1,5 @@
 <?php
-require_once 'app.php';
+require_once 'App.php';
 require_once 'navbar.php';
 //Cek hak akses, Defaultnya sudah ada admin
 if (!$session) {
@@ -65,15 +65,14 @@ if (!$session) {
     JOIN tbsppsiswa ON tbsiswa.NIS = tbsppsiswa.nis
     JOIN tbkelas ON tbkelas.KodeKelas = tbsppsiswa.kodekelas
     JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP
-    WHERE tbsppsiswa.nis = ?
-    ";
-            $stmtTahunAjaran = $conn->prepare($query);
+    WHERE tbsppsiswa.nis = :nis";
+
+            $stmtSchoolYear = $conn->prepare($query);
             $nis = ($app->cekPemissionLevel($levelUser, "Siswa")) ? $idUser : $nis;
-            $stmtTahunAjaran->bind_param("i", $nis);
-            $stmtTahunAjaran->execute();
-            $result = $stmtTahunAjaran->get_result();
-            if ($result->num_rows > 0) {
-                $result->fetch_all(MYSQLI_ASSOC);
+            $stmtSchoolYear->bindParam(":nis", $nis);
+            $stmtSchoolYear->execute();
+            if ($stmtSchoolYear->rowCount() > 0) {
+                $stmtSchoolYear->fetchAll(PDO::FETCH_ASSOC);
             ?>
                 <label for="tahunajaran">Pilih Tahun Ajaran</label>
                 <select name='tahunajaran' id="tahunajaran" required>
@@ -100,7 +99,7 @@ if (!$session) {
                 <hr>
                 <?php } elseif (!empty($_GET['kodepembayaran'])) {
                 $kodepembayaran = $_GET['kodepembayaran'];
-                $stmtSiswa = $conn->prepare("SELECT tbsiswa.NIS, tbsiswa.NamaSiswa, tbsppsiswa.kode_spp_siswa,  tbkelas.NamaKelas, tbspp.TahunAjaran, tbspp.BesarBayaran, tbpembayaran.BulanDibayar,
+                $stmt_data_spp = $conn->prepare("SELECT tbsiswa.NIS, tbsiswa.NamaSiswa, tbsppsiswa.kode_spp_siswa,  tbkelas.NamaKelas, tbspp.TahunAjaran, tbspp.BesarBayaran, tbpembayaran.BulanDibayar,
       (tbspp.BesarBayaran - SUM(tbtransaksi.jumlah_bayaran)) AS sisa
       FROM tbpembayaran 
       LEFT JOIN tbtransaksi ON tbtransaksi.kodepembayaran = tbpembayaran.KodePembayaran
@@ -108,12 +107,11 @@ if (!$session) {
       JOIN tbsiswa ON tbsiswa.NIS = tbsppsiswa.nis
       JOIN tbkelas ON tbsppsiswa.Kodekelas = tbkelas.KodeKelas 
       JOIN tbspp ON tbkelas.KodeSPP = tbspp.KodeSPP 
-      WHERE tbpembayaran.KodePembayaran = ? GROUP BY tbpembayaran.KodePembayaran
+      WHERE tbpembayaran.KodePembayaran = :KodePembayaran GROUP BY tbpembayaran.KodePembayaran
       ");
-                $stmtSiswa->bind_param("s", $kodepembayaran);
-                $stmtSiswa->execute();
-                $resultSiswa = $stmtSiswa->get_result();
-                $dataSiswa = $resultSiswa->fetch_assoc();
+                $stmt_data_spp->bindParam(":KodePembayaran", $kodepembayaran);
+                $stmt_data_spp->execute();
+                $dataSiswa = $stmt_data_spp->fetch(PDO::FETCH_ASSOC);
                 if ($resultSiswa->num_rows > 0) {
                 ?>
                     <div style="overflow-x: auto;">
@@ -183,14 +181,10 @@ if (!$session) {
                             </thead>
                             <tbody>
                                 <?php
-                                $stmtSiswa->close();
-                                $stmtTransaksi = $conn->prepare("SELECT tbtransaksi.*, tbpetugas.NamaPetugas FROM `tbtransaksi`
-          LEFT JOIN tbpetugas ON tbpetugas.KodePetugas = tbtransaksi.kodepetugas
-          WHERE tbtransaksi.kodepembayaran = ?");
-                                $stmtTransaksi->bind_param("s", $kodepembayaran);
-                                $stmtTransaksi->execute();
-                                $resultTransaksi = $stmtTransaksi->get_result();
-                                $fetchTransaksi = $resultTransaksi->fetch_all(MYSQLI_ASSOC);
+                                $stmtTransaction = $conn->prepare("SELECT tbtransaksi.*, tbpetugas.NamaPetugas FROM `tbtransaksi` LEFT JOIN tbpetugas ON tbpetugas.KodePetugas = tbtransaksi.kodepetugas WHERE tbtransaksi.kodepembayaran = :kodepembayaran");
+                                $stmtTransaction->bindParam(":kodepembayaran", $kodepembayaran);
+                                $stmtTransaction->execute();
+                                $fetchTransaksi = $stmtTransaction->fetchAll(MYSQLI_ASSOC);
                                 $no = 1;
                                 if ($resultTransaksi->num_rows >= 1) {
                                     foreach ($fetchTransaksi as $dataTransaksi) {
@@ -207,7 +201,7 @@ if (!$session) {
                                             <td>
                                                 <?php if ($idUser == $dataTransaksi['kodepetugas'] || $app->cekPemissionLevel($levelUser)) { ?>
                                                     <span><a class="btn-small blue" href='pembayaranspp.php?edit=true&idtransaksi=<?= $dataTransaksi['idtransaksi'] ?>'">Edit</a></span>
-                <span><a class=" btn-small red" onclick="deletepembayaran('<?= $dataTransaksi['idtransaksi'] ?>','<?= $kodepembayaran ?>')">Delete</a></span>
+                                                    <span><a class=" btn-small red" onclick="deletepembayaran('<?= $dataTransaksi['idtransaksi'] ?>','<?= $kodepembayaran ?>')">Delete</a></span>
                                                 <?php } ?>
                                             </td>
                                         </tr>
@@ -216,7 +210,6 @@ if (!$session) {
                                 } else { ?>
                                     <td colspan="8"> Data Kosong</td>
                                 <?php }
-                                $stmtTransaksi->close();
                                 ?>
                             </tbody>
                         </table>

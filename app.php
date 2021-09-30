@@ -1,39 +1,62 @@
 <?php
+// Mendefinisikan halaman url utama
 define("BASEURL", "http://localhost/aplikasispp");
-// URL
+
+// Mengambil url yang dikunjungi
 $url = explode('/', $_SERVER['REQUEST_URI']);
 $urlSplit = explode('?', $url[2]);
 $selectedUrl = $urlSplit[0];
-//Koneksi SQL
-$conn = new mysqli('localhost', 'root', '', 'dbspp2');
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-if ($conn->connect_error) {
-    die("Koneksi mysql error : " . $conn->connect_error);
+
+//Menyiapkan info koneksi
+$dataSourceName = 'mysql:host=localhost;dbname=dbspp2';
+$username = "root";
+$password = "";
+$option = [
+    PDO::ATTR_PERSISTENT,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+];
+
+//Membuat koneksi database
+try {
+    $conn = new PDO($dataSourceName, $username, $password, $option);
+} catch (PDOException $e) {
+    die("Koneksi database error: ".$e->getMessage());
 }
 
-// Session login dimulai false
+// Cek Session login
 if (!session_id()) {
     session_start();
 }
+
+//Variabel session dimulai false
 $session = false;
 
 // Jika ada session username dari proses login...
 @$idUser = $_SESSION['iduser'];
 @$username = $_SESSION['username'];
 @$levelUser = $_SESSION['level'];
-@$bioname = $_SESSION['bioname'];
-if ($idUser && $username && $levelUser && $bioname) {
+@$bio_name = $_SESSION['bioname'];
+if ($idUser && $username && $levelUser && $bio_name) {
     // ... ada session (session = true)
     $session = true;
 }
 
-//Buat objek yang akan digunakan
+//Buat objek App yang akan digunakan
 $app = new App();
 
+/**
+ * Kelas yang memuat kebutuhan aplikasi website pembayaran spp
+ * @author David Resanto
+ */
 class App
 {
-    // Cek Hak Akses
-    public function cekPemissionLevel($levelUser, $level = 'Admin')
+    /**
+     * Mengecek apakah level user sama
+     * @param string $levelUser String level user dari proses login.
+     * @param string $level level yang ingin dicek.
+     * @return boolean Mengembalikan nilai true atau false.
+     */
+    public function cekPemissionLevel(string $levelUser, string $level = 'Admin')
     {
         if ($levelUser == $level) {
             return true;
@@ -41,7 +64,13 @@ class App
         return false;
     }
 
-    public function konfirmasiPassword($password1, $password2)
+    /**
+     * Mengecek apakah password sama
+     * @param string $password1 Password pertama yang ingin dicek.
+     * @param string $password2 Password kedua yang ingin dicek.
+     * @return boolean Mengembalikan nilai true atau false.
+     */
+    public function confirmPassword($password1, $password2)
     {
         if ($password1 == $password2) {
             return true;
@@ -49,13 +78,21 @@ class App
         return false;
     }
 
-    //Format Angka 
+    /**
+     * Membuat format angka dengan pemisah koma dan titik
+     * @param int $number Angka yang ingin diformat.
+     * @return string Angka yang telah diformat.
+     */
     public function numberformat($number)
     {
         return number_format($number, 0, ',', '.');
     }
 
-    //Format String
+    /**
+     * Membuat password random
+     * @param int $length Jumlah karakter.
+     * @return string pasword yang telah di-generate.
+     */
     public function generateRandomString($length = 6)
     {
         $randomstring = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
@@ -63,7 +100,13 @@ class App
         return $password;
     }
 
-    //Format Set Pesan
+    /**
+     * Membuat pesan yang ingin dikirimkan ke suatu halaman melalui sesi
+     * @param string $pesan Isi pesan yang ingin dikirimkan.
+     * @param string $aksi Jumlah karakter.
+     * @param string $warna Warna karakter.
+     * @return void sesi flash pesan
+     */
     function setpesan($pesan, $aksi = "", $warna = "green")
     {
         $_SESSION['flash'] = [
@@ -73,11 +116,18 @@ class App
         ];
     }
 
+    /**
+     * Membuat pesan langsung yang ingin dikirimkan melalui sesi
+     * @param string $pesan Isi pesan yang ingin dikirimkan.
+     */
     public function setPesanDirect($pesan)
     {
         $_SESSION['pesandirect'] = $pesan;
     }
-    //Format Pesan Alert Dialog
+    
+    /**
+     * Memanggil pesan langsung
+     */
     public function pesanDirect()
     {
         if (!empty($_SESSION['pesandirect'])) {
@@ -87,7 +137,9 @@ class App
         }
     }
 
-    //Format Pesan Alert Dialog
+    /**
+     * Memanggil pesan dialog
+     */
     public function pesanDialog()
     {
         if (!empty($_SESSION['flash'])) {
@@ -97,7 +149,9 @@ class App
         }
     }
 
-    //Format Pesan
+    /**
+     * Memanggil pesan
+     */
     public function pesan()
     {
         if (!empty($_SESSION['flash'])) {
@@ -108,12 +162,20 @@ class App
         }
     }
 
-    public function returnForm(...$input)
+    /**
+     * Menyimpan form yang telah inputkan
+     * @param mixed ...$input Form yang telah diinputkan
+     */
+    public function setReturnForm(...$input)
     {
         $_SESSION["returnForm"] = $input;
     }
 
-    public function cekReturnForm($returnedform)
+    /**
+     * Mengembalikan form yang telah diinputkan
+     * @return array|null Form yang telah dikembalikan
+     */
+    public function returnForm()
     {
         if (!empty($_SESSION["returnForm"])) {
             return $_SESSION["returnForm"];
@@ -125,7 +187,7 @@ class App
         "April", "Mei", "Juni"
     ];
 
-    public function getBulan()
+    public function getMonth()
     {
         return $this->bulan;
     }

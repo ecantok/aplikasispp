@@ -1,6 +1,6 @@
 <?php
 
-require_once 'app.php';
+require_once 'App.php';
 if (!$session) {
     header("Location:login.php");
 }
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 if (move_uploaded_file($imageTmp, "img/" . $newImageName)) {
                     $resultGambar = $conn->query("SELECT gambar_logo FROM tbdatasekolah");
-                    $datagambar = $resultGambar->fetch_assoc();
+                    $datagambar = $resultGambar->fetch(PDO::FETCH_ASSOC);
                     $gambar_logo = $datagambar['gambar_logo'];
 
                     if ($gambar_logo != "default.png") {
@@ -57,21 +57,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     //UPDATE
     $q = "UPDATE `tbdatasekolah` SET 
-    `gambar_logo`= ?,
-    `nama_sekolah`= ?,
-    `npsn`= ?,
-    `alamat`= ?,
-    `kelurahan`= ?,
-    `kecamatan`= ?,
-    `kota`= ?,
-    `provinsi`= ?,
-    `kode_pos`= ?,
-    `no_telp`= ?,
-    `email`= ?";
+    `gambar_logo`= :gambar,
+    `nama_sekolah`= :nama,
+    `npsn`= :npsn,
+    `alamat`= :alamat,
+    `kelurahan`= :kel,
+    `kecamatan`= :kec,
+    `kota`= :kt,
+    `provinsi`= :prov,
+    `kode_pos`= :pos,
+    `no_telp`= :notelp,
+    `email`= :mail";
     $stmtUpdate = $conn->prepare($q);
-    $stmtUpdate->bind_param("ssisssssiss", $newImageName, $namasekolah, $npsn, $alamat, $kelurahan, $kecamatan, $kota, $provinsi, $kodepos, $notelp, $email);
-    $stmtUpdate->execute();
-    if ($conn->errno == 0) {
+    $stmtUpdate->execute(array(
+        ":gambar"=> $newImageName,
+        ":nama"=> $namasekolah,
+        ":npsn"=> $npsn,
+        ":alamat"=> $alamat,
+        ":kel"=> $kelurahan,
+        ":kec"=> $kecamatan,
+        ":kt"=> $kota,
+        ":prov"=> $provinsi,
+        ":pos"=> $kodepos,
+        ":notelp"=> $notelp,
+        ":mail"=> $email,
+    ));
+    if ($conn->errorCode() == 0) {
         $app->setpesan("Data Sekolah Berhasil disimpan!");
     } else {
         $app->setpesan("Data Sekolah Berhasil disimpan!", "", "red");
@@ -97,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div>
             <?php $app->pesanDialog();
             $app->pesanDirect();
-            $data = $conn->query("SELECT * FROM tbdatasekolah")->fetch_assoc();
+            $data = $conn->query("SELECT * FROM tbdatasekolah")->fetch(PDO::FETCH_ASSOC);
             ?>
         </div>
         <div class="card-box">

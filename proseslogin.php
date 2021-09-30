@@ -1,22 +1,23 @@
 <?php
 if (!empty($_POST)) {
-  require_once 'app.php';
+  require_once 'App.php';
     $username = $_POST['username'];
     $password = $_POST['password'];
     
     // Siapkan dan jalankan query
-    $stmt = $conn->prepare("SELECT log.*, tbsiswa.NamaSiswa, tbpetugas.NamaPetugas FROM tblogin log LEFT JOIN tbsiswa on tbsiswa.NIS = log.nis_siswa LEFT JOIN tbpetugas on tbpetugas.KodePetugas = log.kode_petugas WHERE Username = ? AND `Password` = md5(?)");
-    $stmt->bind_param('ss', $username, $password);
-    $stmt->execute();
+    $stmt = $conn->prepare("SELECT log.*, tbsiswa.NamaSiswa, tbpetugas.NamaPetugas FROM tblogin log LEFT JOIN tbsiswa on tbsiswa.NIS = log.nis_siswa LEFT JOIN tbpetugas on tbpetugas.KodePetugas = log.kode_petugas WHERE Username = :user AND `Password` = md5(:pass)");
+    $stmt->execute(array(
+      ":user" => $username,
+      ":pass" => $password
+    ));
 
     // Mengambil hasil dari query yang dijalankan
-    $result = $stmt->get_result();
 
     // Validasi
-    if ($result->num_rows > 0) {
+    if ($stmt->rowCount() > 0) {
 
       //Mengambil data
-      $data = mysqli_fetch_assoc($result);
+      $data = $stmt->fetch(PDO::FETCH_ASSOC);
       
       // Memulai session dan Mengambil Nama berdasarkan Username
       
